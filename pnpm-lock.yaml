@@ -11,13 +11,13 @@ importers:
       phaser:
         specifier: ^3.80.0
         version: 3.90.0
+      vite:
+        specifier: ^5.4.0
+        version: 5.4.19
     devDependencies:
       typescript:
         specifier: ^5.5.4
         version: 5.9.2
-      vite:
-        specifier: ^5.4.0
-        version: 5.4.19
 
 packages:
 

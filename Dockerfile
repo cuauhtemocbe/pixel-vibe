@@ -61,15 +61,15 @@ RUN pnpm install --frozen-lockfile --prod
 # Copy built assets from builder stage
 COPY --from=builder --chown=node:node /app/dist ./dist
 
-# Expose port for Railway
-EXPOSE 5173
+# Expose port for Railway (Railway will set PORT env var)
+EXPOSE ${PORT:-5173}
 
 # Set environment to production
 ENV NODE_ENV=production
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:5173/ || exit 1
+  CMD curl -f http://localhost:${PORT:-5173}/ || exit 1
 
 # Use Vite's preview mode to serve production build
 CMD ["pnpm", "preview"]
