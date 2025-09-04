@@ -1,75 +1,61 @@
-# Multi-stage build for production
+# ---------- Builder ----------
 FROM node:20-alpine AS builder
 
-# Install system dependencies
-RUN apk add --no-cache git wget curl
+# Dependencias mínimas del sistema
+RUN apk add --no-cache git
 
-# Create pnpm store directory
-RUN mkdir -p /home/node/.pnpm-store && chown -R node:node /home/node/.pnpm-store
+# Habilitar pnpm vía Corepack (sin scripts externos)
+ENV PNPM_HOME="/root/.local/share/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Switch to node user
-USER node
-WORKDIR /home/node
-
-# Install pnpm
-RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.profile" SHELL="$(which sh)" sh -
-
-# Add pnpm to PATH
-ENV PATH="/home/node/.local/share/pnpm:$PATH"
-
-# Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY --chown=node:node package.json pnpm-lock.yaml ./
-
-# Install dependencies
+# Instalar dependencias con cache óptimo
+COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
-# Copy source code
-COPY --chown=node:node . .
-
-# Type check and build the application
+# Copiar código y construir
+COPY . .
 RUN pnpm run typecheck && pnpm run build
 
-# Production stage - serve with Node.js for Railway
+
+# ---------- Producción ----------
 FROM node:20-alpine AS production
 
-# Install system dependencies
-RUN apk add --no-cache git wget curl
+# Utilidades para healthcheck
+RUN apk add --no-cache curl
 
-# Create pnpm store directory
-RUN mkdir -p /home/node/.pnpm-store && chown -R node:node /home/node/.pnpm-store
+# Entorno
+ENV NODE_ENV=production
+ENV PNPM_HOME="/home/node/.local/share/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+# Fija un puerto por defecto; Railway exporta PORT en runtime
+ENV PORT=8080
 
-# Switch to node user
-USER node
-WORKDIR /home/node
+# Habilitar pnpm en esta etapa
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Install pnpm
-RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.profile" SHELL="$(which sh)" sh -
+# Crear y usar usuario sin privilegios
+RUN adduser -D -u 10001 nodeuser
+USER 10001
 
-# Add pnpm to PATH
-ENV PATH="/home/node/.local/share/pnpm:$PATH"
-
-# Set working directory
 WORKDIR /app
 
-# Copy package files and install only production dependencies
-COPY --chown=node:node package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prod
+# Para usar "vite preview" en runtime, necesitamos devDependencies (vite)
+# Por eso usamos --prod=false
+COPY --chown=nodeuser:nodeuser package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile --prod=false
 
-# Copy built assets from builder stage
-COPY --from=builder --chown=node:node /app/dist ./dist
+# Copiamos solo los artefactos construidos
+COPY --from=builder --chown=nodeuser:nodeuser /app/dist ./dist
 
-# Railway will provide PORT env var, expose it
-EXPOSE $PORT
+# Exponer puerto fijo (Docker no expande variables aquí)
+EXPOSE 8080
 
-# Set environment to production
-ENV NODE_ENV=production
-
-# Health check using Railway's PORT
+# Healthcheck contra el puerto (Railway asigna $PORT)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:$PORT/ || exit 1
+  CMD curl -fsS "http://127.0.0.1:${PORT}/" || exit 1
 
-# Use shell to properly expand PORT environment variable
-CMD ["sh", "-c", "pnpm preview --host 0.0.0.0 --port $PORT"]
+# Ejecución en modo preview sirviendo dist
+CMD ["sh", "-c", "pnpm preview --host 0.0.0.0 --port ${PORT}"]

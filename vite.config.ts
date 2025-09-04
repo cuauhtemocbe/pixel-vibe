@@ -1,37 +1,38 @@
+// vite.config.ts
 import { defineConfig } from "vite";
 import { resolve } from "path";
 import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
-  base: './',
+  base: "./",
   publicDir: "public",
   build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
+    outDir: "dist",
+    assetsDir: "assets",
     sourcemap: false,
-    minify: 'esbuild',
+    minify: "esbuild",
     rollupOptions: {
       output: {
         manualChunks: {
-          phaser: ['phaser']
-        }
-      }
-    }
+          phaser: ["phaser"],
+        },
+      },
+    },
   },
   server: {
     host: true,
-    port: 5173
+    port: 5173,
   },
   preview: {
-    host: '0.0.0.0',
-    port: parseInt(process.env.PORT || '5173'),
+    host: true, // equivale a 0.0.0.0
+    port: Number(process.env.PORT || 5173),
     strictPort: false,
-    allowedHosts: 'all'  // Allow all hosts for Railway deployment
+    allowedHosts: ["pixel-vibe-production.up.railway.app"], // <- aquí el dominio de Railway
   },
   resolve: {
     alias: {
       "@": resolve(fileURLToPath(new URL(".", import.meta.url)), "./src"),
-      "@scenes": resolve(fileURLToPath(new URL(".", import.meta.url)), "./src/scenes")
-    }
-  }
+      "@scenes": resolve(fileURLToPath(new URL(".", import.meta.url)), "./src/scenes"),
+    },
+  },
 });
