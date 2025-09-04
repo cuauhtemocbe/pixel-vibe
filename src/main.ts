@@ -33,13 +33,9 @@ function setupFullscreenButton() {
   if (!fullscreenBtn) return;
 
   fullscreenBtn.addEventListener('click', () => {
-    const gameContainer = document.getElementById('game');
-    
-    if (!gameContainer) return;
-
     if (!document.fullscreenElement) {
-      // Enter fullscreen
-      gameContainer.requestFullscreen().catch(err => {
+      // Enter fullscreen on document body to include all UI elements
+      document.documentElement.requestFullscreen().catch(err => {
         console.warn('Error attempting to enable fullscreen:', err);
       });
     } else {

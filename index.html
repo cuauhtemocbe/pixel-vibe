@@ -60,6 +60,34 @@
         display: none;
       }
       
+      /* Ensure mobile controls are visible and positioned correctly in fullscreen */
+      :fullscreen #mobile-controls {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        pointer-events: none;
+      }
+      
+      /* Ensure debug controls remain visible in fullscreen */
+      :fullscreen #debug-toggle {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1002;
+      }
+      
+      :fullscreen #debug {
+        position: fixed;
+        top: 50px;
+        left: 10px;
+        z-index: 1001;
+      }
+      
       /* Mobile controls */
       #mobile-controls {
         position: fixed;
