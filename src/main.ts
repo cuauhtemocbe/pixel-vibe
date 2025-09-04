@@ -15,7 +15,7 @@ const config: Phaser.Types.Core.GameConfig = {
   roundPixels: true,
   physics: {
     default: "arcade",
-    arcade: { gravity: { y: 800 }, debug: false }
+    arcade: { gravity: { x: 0, y: 800 }, debug: false }
   },
   scale: {
     mode: Phaser.Scale.FIT,
