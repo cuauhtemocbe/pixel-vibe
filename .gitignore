@@ -1,0 +1,42 @@
+# Dependencies
+node_modules
+.pnpm-store/
+
+# Build outputs
+dist
+build
+
+# IDE and editor files
+.vscode
+.idea
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Package manager files (optional - you may want to commit these)
+# .npmrc
+# .pnpmrc
+
+# Development/temp folders
+devel/
+temp/
+*.tmp
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Coverage directory
+coverage/
+
+# Cache directories
+.cache/
+.parcel-cache/

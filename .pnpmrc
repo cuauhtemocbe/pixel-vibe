@@ -1,0 +1,11 @@
+# Store packages in a shared volume for better performance
+store-dir=/home/node/.pnpm-store
+
+# Enable strict peer dependencies checking
+strict-peer-dependencies=false
+
+# Auto-install peer dependencies
+auto-install-peers=true
+
+# Use faster node-modules linker for development
+node-linker=hoisted
