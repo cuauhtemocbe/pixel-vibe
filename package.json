@@ -4,12 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
-    "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0 --port ${PORT:-5173}",
+    "dev": "vite",
+    "build": "tsc && vite build",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf node_modules .pnpm-store",
-    "reinstall": "pnpm clean && pnpm install"
+    "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
     "phaser": "^3.80.0",
