@@ -86,23 +86,42 @@ function setupMobileControls() {
     // Handle touch events for mobile
     button.addEventListener('touchstart', (e) => {
       e.preventDefault();
-      simulateKeyDown(keyCode);
-    });
+      e.stopPropagation();
+      dispatchMobileInput(keyCode, true);
+      button.classList.add('active');
+    }, { passive: false });
 
     button.addEventListener('touchend', (e) => {
       e.preventDefault();
-      simulateKeyUp(keyCode);
+      e.stopPropagation();
+      dispatchMobileInput(keyCode, false);
+      button.classList.remove('active');
+    }, { passive: false });
+
+    // Prevent touch events from triggering click events
+    button.addEventListener('touchcancel', (e) => {
+      e.preventDefault();
+      dispatchMobileInput(keyCode, false);
+      button.classList.remove('active');
     });
 
     // Handle mouse events for desktop testing
     button.addEventListener('mousedown', (e) => {
       e.preventDefault();
-      simulateKeyDown(keyCode);
+      dispatchMobileInput(keyCode, true);
+      button.classList.add('active');
     });
 
     button.addEventListener('mouseup', (e) => {
       e.preventDefault();
-      simulateKeyUp(keyCode);
+      dispatchMobileInput(keyCode, false);
+      button.classList.remove('active');
+    });
+
+    // Handle mouse leave to prevent stuck buttons
+    button.addEventListener('mouseleave', (e) => {
+      dispatchMobileInput(keyCode, false);
+      button.classList.remove('active');
     });
 
     // Prevent context menu on long press
@@ -110,6 +129,31 @@ function setupMobileControls() {
       e.preventDefault();
     });
   });
+}
+
+// Dispatch custom mobile input events
+function dispatchMobileInput(keyCode: string, pressed: boolean) {
+  // Debug logging
+  const debugEl = document.getElementById('debug');
+  if (debugEl && debugEl.style.display === 'block') {
+    debugEl.textContent = `Mobile Input: ${keyCode} ${pressed ? 'PRESSED' : 'RELEASED'} (${new Date().toLocaleTimeString()})`;
+  }
+  
+  const event = new CustomEvent('mobileInput', {
+    detail: {
+      key: keyCode,
+      pressed: pressed,
+      action: pressed ? 'keydown' : 'keyup'
+    }
+  });
+  window.dispatchEvent(event);
+  
+  // Also dispatch keyboard events for visual feedback
+  if (pressed) {
+    simulateKeyDown(keyCode);
+  } else {
+    simulateKeyUp(keyCode);
+  }
 }
 
 // Simulate keyboard events for Phaser
@@ -190,4 +234,32 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', setupKeyboardVisualFeedback);
 } else {
   setupKeyboardVisualFeedback();
+}
+
+// Debug toggle functionality
+function setupDebugToggle() {
+  const debugToggle = document.getElementById('debug-toggle');
+  const debugEl = document.getElementById('debug');
+  let debugEnabled = false;
+  
+  if (debugToggle && debugEl) {
+    debugToggle.addEventListener('click', () => {
+      debugEnabled = !debugEnabled;
+      if (debugEnabled) {
+        debugEl.style.display = 'block';
+        debugToggle.textContent = 'HIDE DEBUG';
+        debugEl.textContent = 'Debug mode enabled - touch controls to see events';
+      } else {
+        debugEl.style.display = 'none';
+        debugToggle.textContent = 'DEBUG';
+      }
+    });
+  }
+}
+
+// Initialize debug toggle when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupDebugToggle);
+} else {
+  setupDebugToggle();
 }

@@ -4,6 +4,15 @@ export default class Play extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   private spaceKey!: Phaser.Input.Keyboard.Key;
+  
+  // Mobile input state
+  private mobileInput = {
+    left: false,
+    right: false,
+    up: false,
+    down: false,
+    jump: false
+  };
 
   constructor() {
     super("Play");
@@ -34,16 +43,52 @@ export default class Play extends Phaser.Scene {
 
     this.physics.world.setBounds(0, 0, 1000, 180);
     this.cameras.main.setBounds(0, 0, 1000, 180);
+    
+    // Setup mobile input listeners
+    this.setupMobileInputListeners();
+  }
+  
+  private setupMobileInputListeners() {
+    // Listen for custom mobile input events
+    window.addEventListener('mobileInput', (event: any) => {
+      const { action, key, pressed } = event.detail;
+      
+      // Debug logging
+      console.log(`Mobile input received: ${key} ${pressed ? 'pressed' : 'released'}`);
+      
+      switch (key) {
+        case 'ArrowLeft':
+          this.mobileInput.left = pressed;
+          break;
+        case 'ArrowRight':
+          this.mobileInput.right = pressed;
+          break;
+        case 'ArrowUp':
+          this.mobileInput.up = pressed;
+          break;
+        case 'ArrowDown':
+          this.mobileInput.down = pressed;
+          break;
+        case 'Space':
+          this.mobileInput.jump = pressed;
+          break;
+      }
+    });
   }
 
   update(_: number, dt: number) {
     const body = this.player.body as Phaser.Physics.Arcade.Body;
     const onFloor = body.blocked.down || body.touching.down;
 
-    // Add null checks for cursors
-    const left = this.cursors?.left?.isDown ?? false;
-    const right = this.cursors?.right?.isDown ?? false;
-    const jump = (this.cursors?.up?.isDown || this.cursors?.space?.isDown || this.spaceKey?.isDown) ?? false;
+    // Get input from both keyboard and mobile controls
+    const keyboardLeft = this.cursors?.left?.isDown ?? false;
+    const keyboardRight = this.cursors?.right?.isDown ?? false;
+    const keyboardJump = (this.cursors?.up?.isDown || this.cursors?.space?.isDown || this.spaceKey?.isDown) ?? false;
+    
+    // Combine keyboard and mobile input
+    const left = keyboardLeft || this.mobileInput.left;
+    const right = keyboardRight || this.mobileInput.right;
+    const jump = keyboardJump || this.mobileInput.jump || this.mobileInput.up;
 
     const speed = 90;
     if (left && !right) {
