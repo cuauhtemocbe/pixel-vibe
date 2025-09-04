@@ -151,3 +151,43 @@ if (document.readyState === 'loading') {
 } else {
   setupMobileControls();
 }
+
+// Visual feedback for keyboard input
+function setupKeyboardVisualFeedback() {
+  const buttonMap: { [key: string]: string } = {
+    'ArrowLeft': 'btn-left',
+    'ArrowRight': 'btn-right',
+    'ArrowUp': 'btn-up',
+    'ArrowDown': 'btn-down',
+    ' ': 'jump-btn' // Space key
+  };
+
+  // Handle keyboard down events
+  document.addEventListener('keydown', (e) => {
+    const buttonId = buttonMap[e.key];
+    if (buttonId) {
+      const button = document.getElementById(buttonId);
+      if (button) {
+        button.classList.add('keyboard-active');
+      }
+    }
+  });
+
+  // Handle keyboard up events
+  document.addEventListener('keyup', (e) => {
+    const buttonId = buttonMap[e.key];
+    if (buttonId) {
+      const button = document.getElementById(buttonId);
+      if (button) {
+        button.classList.remove('keyboard-active');
+      }
+    }
+  });
+}
+
+// Initialize keyboard visual feedback when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupKeyboardVisualFeedback);
+} else {
+  setupKeyboardVisualFeedback();
+}

@@ -144,12 +144,14 @@
         transform: scale(0.95);
       }
       
-      /* Hide controls on desktop (optional) */
-      @media (min-width: 768px) and (pointer: fine) {
-        #mobile-controls {
-          display: none;
-        }
+      /* Visual feedback for keyboard input */
+      .keyboard-active {
+        background: rgba(255, 255, 255, 0.3) !important;
+        border-color: #888 !important;
+        transform: scale(0.95) !important;
       }
+      
+      /* Always show controls - visual feedback for all platforms */
     </style>
   </head>
   <body>
