@@ -49,11 +49,127 @@
       :fullscreen #fullscreen-btn {
         display: none;
       }
+      
+      /* Mobile controls */
+      #mobile-controls {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        pointer-events: none;
+      }
+      
+      /* D-pad container */
+      #dpad {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        pointer-events: auto;
+      }
+      
+      /* D-pad buttons */
+      .dpad-btn {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid #444;
+        color: white;
+        font-family: monospace;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.1s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .dpad-btn:active {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(0.95);
+      }
+      
+      #btn-up {
+        top: 0;
+        left: 40px;
+        border-radius: 8px 8px 4px 4px;
+      }
+      
+      #btn-down {
+        bottom: 0;
+        left: 40px;
+        border-radius: 4px 4px 8px 8px;
+      }
+      
+      #btn-left {
+        left: 0;
+        top: 40px;
+        border-radius: 8px 4px 4px 8px;
+      }
+      
+      #btn-right {
+        right: 0;
+        top: 40px;
+        border-radius: 4px 8px 8px 4px;
+      }
+      
+      /* Jump button */
+      #jump-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid #444;
+        color: white;
+        font-family: monospace;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.1s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: auto;
+      }
+      
+      #jump-btn:active {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(0.95);
+      }
+      
+      /* Hide controls on desktop (optional) */
+      @media (min-width: 768px) and (pointer: fine) {
+        #mobile-controls {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body>
     <button id="fullscreen-btn" title="Entrar a pantalla completa">⛶ FULLSCREEN</button>
     <div id="game"></div>
+    
+    <!-- Mobile Controls -->
+    <div id="mobile-controls">
+      <!-- D-pad -->
+      <div id="dpad">
+        <button id="btn-up" class="dpad-btn" data-key="ArrowUp">▲</button>
+        <button id="btn-down" class="dpad-btn" data-key="ArrowDown">▼</button>
+        <button id="btn-left" class="dpad-btn" data-key="ArrowLeft">◀</button>
+        <button id="btn-right" class="dpad-btn" data-key="ArrowRight">▶</button>
+      </div>
+      
+      <!-- Jump button -->
+      <button id="jump-btn" data-key="Space">JUMP</button>
+    </div>
+    
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

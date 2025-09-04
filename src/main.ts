@@ -73,3 +73,81 @@ if (document.readyState === 'loading') {
 } else {
   setupFullscreenButton();
 }
+
+// Mobile controls functionality
+function setupMobileControls() {
+  const mobileButtons = document.querySelectorAll('#mobile-controls button');
+  
+  mobileButtons.forEach(button => {
+    const keyCode = button.getAttribute('data-key');
+    
+    if (!keyCode) return;
+
+    // Handle touch events for mobile
+    button.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      simulateKeyDown(keyCode);
+    });
+
+    button.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      simulateKeyUp(keyCode);
+    });
+
+    // Handle mouse events for desktop testing
+    button.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      simulateKeyDown(keyCode);
+    });
+
+    button.addEventListener('mouseup', (e) => {
+      e.preventDefault();
+      simulateKeyUp(keyCode);
+    });
+
+    // Prevent context menu on long press
+    button.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
+  });
+}
+
+// Simulate keyboard events for Phaser
+function simulateKeyDown(keyCode: string) {
+  const event = new KeyboardEvent('keydown', {
+    code: keyCode,
+    key: getKeyFromCode(keyCode),
+    bubbles: true,
+    cancelable: true
+  });
+  document.dispatchEvent(event);
+}
+
+function simulateKeyUp(keyCode: string) {
+  const event = new KeyboardEvent('keyup', {
+    code: keyCode,
+    key: getKeyFromCode(keyCode),
+    bubbles: true,
+    cancelable: true
+  });
+  document.dispatchEvent(event);
+}
+
+// Convert key codes to key values
+function getKeyFromCode(code: string): string {
+  const keyMap: { [key: string]: string } = {
+    'ArrowUp': 'ArrowUp',
+    'ArrowDown': 'ArrowDown',
+    'ArrowLeft': 'ArrowLeft',
+    'ArrowRight': 'ArrowRight',
+    'Space': ' '
+  };
+  return keyMap[code] || code;
+}
+
+// Initialize mobile controls when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupMobileControls);
+} else {
+  setupMobileControls();
+}
