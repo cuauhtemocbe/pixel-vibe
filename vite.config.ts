@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from "vite";
 import { resolve } from "path";
 import { fileURLToPath, URL } from "node:url";
@@ -23,7 +24,7 @@ export default defineConfig({
     port: 5173
   },
   preview: {
-    host: true, // equivale a 0.0.0.0
+    host: true,
     port: Number(process.env.PORT || 5173),
     strictPort: false,
     allowedHosts: ["pixel-vibe-production.up.railway.app"],
@@ -32,6 +33,22 @@ export default defineConfig({
     alias: {
       "@": resolve(fileURLToPath(new URL(".", import.meta.url)), "./src"),
       "@scenes": resolve(fileURLToPath(new URL(".", import.meta.url)), "./src/scenes")
+    }
+  },
+  // @ts-ignore - Vitest configuration
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/test/setup.ts'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/',
+        'src/test/',
+        '**/*.d.ts',
+        'dist/'
+      ]
     }
   }
 });
