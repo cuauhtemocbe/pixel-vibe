@@ -1,6 +1,21 @@
 #!/bin/sh
 
-echo "🔍 Running pre-push validation..."
+# Only run validation on main branch
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+if [ "$current_branch" = "main" ]; then
+    echo "🔍 Running pre-push validation on main branch..."
+    
+    # Run full validation before push
+    if ! pnpm run validate; then
+        echo "❌ Pre-push validation failed. Push aborted."
+        exit 1
+    fi
+    
+    echo "✅ Pre-push validation passed!"
+else
+    echo "⚠️  Skipping pre-push validation (not on main branch)"
+fiecho "🔍 Running pre-push validation..."
 
 # Run full validation before push
 if ! pnpm run validate; then

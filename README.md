@@ -82,6 +82,9 @@ pnpm clean
 
 # Clean and reinstall
 pnpm reinstall
+
+# Validate deployment
+pnpm run validate
 ```
 
 ## Project Structure

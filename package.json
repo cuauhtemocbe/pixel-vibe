@@ -31,8 +31,8 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
-      "pnpm run typecheck",
-      "pnpm run build"
+      "bash -c 'cd /pixel-vibe && pnpm run typecheck'",
+      "bash -c 'cd /pixel-vibe && pnpm run build'"
     ]
   }
 }
