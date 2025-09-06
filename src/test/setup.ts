@@ -167,8 +167,6 @@ HTMLCanvasElement.prototype.getContext = vi.fn((type: string) => {
       addHitRegion: vi.fn(),
       removeHitRegion: vi.fn(),
       clearHitRegions: vi.fn(),
-      stroke: vi.fn(),
-      fill: vi.fn(),
       drawFocusIfNeeded: vi.fn(),
       scrollPathIntoView: vi.fn(),
       isContextLost: vi.fn(() => false),
