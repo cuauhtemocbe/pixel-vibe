@@ -177,7 +177,7 @@ HTMLCanvasElement.prototype.getContext = vi.fn((type: string) => {
     } as unknown as CanvasRenderingContext2D
   }
   return null
-}) as (contextId: string, options?: any) => CanvasRenderingContext2D | WebGLRenderingContext | null
+}) as any
 
 // Mock Audio API
 ;(globalThis as any).Audio = vi.fn(() => ({
