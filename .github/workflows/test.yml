@@ -31,8 +31,8 @@ jobs:
 
     - name: Configure pnpm
       run: |
-        pnpm config set store-dir ~/.pnpm-store
-        pnpm config set cache-dir ~/.pnpm-cache
+        pnpm config set store-dir /tmp/.pnpm-store
+        pnpm config set cache-dir /tmp/.pnpm-cache
 
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
@@ -75,8 +75,8 @@ jobs:
 
     - name: Configure pnpm
       run: |
-        pnpm config set store-dir ~/.pnpm-store
-        pnpm config set cache-dir ~/.pnpm-cache
+        pnpm config set store-dir /tmp/.pnpm-store
+        pnpm config set cache-dir /tmp/.pnpm-cache
 
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
