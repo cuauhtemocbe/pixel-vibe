@@ -1,0 +1,31 @@
+#!/bin/sh
+
+echo "🔍 Running pre-merge validations..."
+
+# Check if we're merging into main branch
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+if [ "$current_branch" = "main" ]; then
+    echo "🛡️  Running full validation on merge to main..."
+    
+    # Run lint-staged for code quality
+    if ! npx lint-staged; then
+        echo "❌ Lint-staged validation failed. Merge aborted."
+        exit 1
+    fi
+    
+    # Run additional validations
+    if ! pnpm run typecheck; then
+        echo "❌ TypeScript validation failed. Merge aborted."
+        exit 1
+    fi
+    
+    if ! pnpm run build; then
+        echo "❌ Build validation failed. Merge aborted."
+        exit 1
+    fi
+    
+    echo "✅ All merge validations passed!"
+else
+    echo "⚠️  Skipping validations (not merging to main branch)"
+fi
