@@ -111,4 +111,6 @@ This project uses pnpm instead of npm for several benefits:
 - Built-in support for monorepos
 
 The Docker setup includes a shared pnpm store volume for improved performance across container rebuilds.
+
+# Test commit on main
 # Fast development
