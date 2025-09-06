@@ -19,7 +19,8 @@
         "esbenp.prettier-vscode",
         "antfu.vite",
         "antfu.vite",
-        "redhat.vscode-yaml"
+        "redhat.vscode-yaml",
+        "github.copilot"
       ]
     }
   },
