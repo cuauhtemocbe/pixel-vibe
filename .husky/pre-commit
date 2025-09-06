@@ -1,1 +1,11 @@
-npx lint-staged
+#!/bin/sh
+
+# Only run lint-staged on main branch
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+if [ "$current_branch" = "main" ]; then
+    echo "🔍 Running lint-staged on main branch..."
+    npx lint-staged
+else
+    echo "⚠️  Skipping lint-staged (not on main branch)"
+fi
