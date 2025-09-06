@@ -196,6 +196,39 @@
         transform: scale(0.95);
       }
       
+      /* Transform button */
+      #transform-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid #444;
+        color: white;
+        font-family: monospace;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.1s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: auto;
+        margin-left: 10px;
+      }
+      
+      #transform-btn:active {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(0.95);
+      }
+      
+      /* Active state for transform button */
+      #transform-btn.active {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: #888;
+        transform: scale(0.95);
+      }
+      
       /* Visual feedback for keyboard input */
       .keyboard-active {
         background: rgba(255, 255, 255, 0.3) !important;
@@ -237,8 +270,11 @@
         <button id="btn-right" class="dpad-btn" data-key="ArrowRight">▶</button>
       </div>
       
-      <!-- Jump button -->
-      <button id="jump-btn" data-key="Space">JUMP</button>
+      <!-- Action buttons -->
+      <div style="display: flex; align-items: flex-end; gap: 10px; pointer-events: auto;">
+        <button id="jump-btn" data-key="Space">JUMP</button>
+        <button id="transform-btn" data-key="KeyT">T</button>
+      </div>
     </div>
     
     <script type="module" src="/src/main.ts"></script>
