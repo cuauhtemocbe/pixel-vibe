@@ -1,0 +1,11 @@
+#!/bin/sh
+
+echo "🔍 Running pre-push validation..."
+
+# Run full validation before push
+if ! pnpm run validate; then
+    echo "❌ Pre-push validation failed. Push aborted."
+    exit 1
+fi
+
+echo "✅ Pre-push validation passed. Proceeding with push..."
