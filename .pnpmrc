@@ -1,5 +1,5 @@
-# Store packages in temp directory for CI/CD compatibility
-store-dir=/tmp/.pnpm-store
+# CI/CD optimized configuration - remove problematic store-dir
+# Let pnpm use default store location
 
 # Enable strict peer dependencies checking
 strict-peer-dependencies=false
