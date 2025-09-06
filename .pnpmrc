@@ -1,6 +1,5 @@
-# Store packages in a writable directory for CI/CD
-# Use /tmp in CI environments or ~/.pnpm-store locally
-store-dir=~/.pnpm-store
+# Store packages in temp directory for CI/CD compatibility
+store-dir=/tmp/.pnpm-store
 
 # Enable strict peer dependencies checking
 strict-peer-dependencies=false
