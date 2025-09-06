@@ -1,5 +1,7 @@
 /// <reference types="vitest/globals" />
 
+export {}
+
 declare global {
   const vi: typeof import('vitest').vi
   const describe: typeof import('vitest').describe

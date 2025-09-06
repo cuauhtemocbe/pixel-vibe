@@ -108,8 +108,76 @@ HTMLCanvasElement.prototype.getContext = vi.fn((type: string) => {
   if (type === 'webgl' || type === 'webgl2') {
     return gl
   }
-  return canvas.getContext()
-})
+  if (type === '2d') {
+    return {
+      fillRect: vi.fn(),
+      clearRect: vi.fn(),
+      getImageData: vi.fn(),
+      putImageData: vi.fn(),
+      createImageData: vi.fn(() => []),
+      setTransform: vi.fn(),
+      drawImage: vi.fn(),
+      save: vi.fn(),
+      fillText: vi.fn(),
+      restore: vi.fn(),
+      beginPath: vi.fn(),
+      moveTo: vi.fn(),
+      lineTo: vi.fn(),
+      closePath: vi.fn(),
+      stroke: vi.fn(),
+      translate: vi.fn(),
+      scale: vi.fn(),
+      rotate: vi.fn(),
+      arc: vi.fn(),
+      fill: vi.fn(),
+      measureText: vi.fn(() => ({ width: 0 })),
+      transform: vi.fn(),
+      rect: vi.fn(),
+      clip: vi.fn(),
+      canvas: {
+        width: 320,
+        height: 180
+      },
+      globalAlpha: 1,
+      globalCompositeOperation: 'source-over',
+      isPointInPath: vi.fn(() => false),
+      isPointInStroke: vi.fn(() => false),
+      fillStyle: '#000000',
+      strokeStyle: '#000000',
+      lineWidth: 1,
+      lineCap: 'butt',
+      lineJoin: 'miter',
+      miterLimit: 10,
+      lineDashOffset: 0,
+      shadowOffsetX: 0,
+      shadowOffsetY: 0,
+      shadowBlur: 0,
+      shadowColor: 'rgba(0, 0, 0, 0)',
+      font: '10px sans-serif',
+      textAlign: 'start',
+      textBaseline: 'alphabetic',
+      direction: 'inherit',
+      imageSmoothingEnabled: true,
+      imageSmoothingQuality: 'low',
+      getLineDash: vi.fn(() => []),
+      setLineDash: vi.fn(),
+      createLinearGradient: vi.fn(),
+      createRadialGradient: vi.fn(),
+      createPattern: vi.fn(),
+      addHitRegion: vi.fn(),
+      removeHitRegion: vi.fn(),
+      clearHitRegions: vi.fn(),
+      stroke: vi.fn(),
+      fill: vi.fn(),
+      drawFocusIfNeeded: vi.fn(),
+      scrollPathIntoView: vi.fn(),
+      isContextLost: vi.fn(() => false),
+      ellipse: vi.fn(),
+      getContextAttributes: vi.fn(() => ({}))
+    } as unknown as CanvasRenderingContext2D
+  }
+  return null
+}) as (contextId: string, options?: any) => CanvasRenderingContext2D | WebGLRenderingContext | null
 
 // Mock Audio API
 ;(globalThis as any).Audio = vi.fn(() => ({
