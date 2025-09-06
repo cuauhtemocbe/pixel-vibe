@@ -8,9 +8,18 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "ms-vscode.vscode-typescript-next",
+        "antfu.browse-lite",
+        "continue.continue",
+        "usernamehw.errorlens",
+        "steoates.autoimport",
+        "dbaeumer.vscode-eslint",
+        "github.vscode-github-actions",
+        "firsttris.vscode-jest-runner",
+        "christian-kohler.path-intellisense",
         "esbenp.prettier-vscode",
-        "dbaeumer.vscode-eslint"
+        "antfu.vite",
+        "antfu.vite",
+        "redhat.vscode-yaml"
       ]
     }
   },
