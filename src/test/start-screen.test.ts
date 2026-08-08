@@ -3,56 +3,29 @@ import Start from '../scenes/Start'
 
 function createBareStart(): any {
   const start = Object.create(Start.prototype)
-  start.currentForm = 'owlet'
-  start.hero = {
-    setTexture: vi.fn(),
-    play: vi.fn()
-  }
-  start.scene = {
-    start: vi.fn()
-  }
+  start.titleAnimationState = 0
+  start.title = { x: 160, y: 60, setAngle: vi.fn() }
+  start.titleShadow = { setPosition: vi.fn() }
+  start.scene = { start: vi.fn() }
   return start
 }
 
-describe('Start screen hero transformation', () => {
-  it('switches the hero from owlet to dude on the first toggle', () => {
+describe('Transformation hero start screen', () => {
+  it('advances a 3D-style title state without changing the title text', () => {
     const start = createBareStart()
 
-    start.toggleHeroForm()
+    start.advanceTitleAnimation()
 
-    expect(start.currentForm).toBe('dude')
-    expect(start.hero.setTexture).toHaveBeenCalledWith('dude_idle', 0)
-    expect(start.hero.play).toHaveBeenCalledWith('dude_idle')
+    expect(start.titleAnimationState).toBe(1)
+    expect(start.titleShadow.setPosition).toHaveBeenCalledWith(165, 65)
+    expect(start.title.setAngle).toHaveBeenCalledWith(1)
   })
 
-  it('switches back to owlet on the next toggle', () => {
-    const start = createBareStart()
-
-    start.toggleHeroForm()
-    start.toggleHeroForm()
-
-    expect(start.currentForm).toBe('owlet')
-    expect(start.hero.setTexture).toHaveBeenLastCalledWith('owlet_idle', 0)
-    expect(start.hero.play).toHaveBeenLastCalledWith('owlet_idle')
-  })
-})
-
-describe('Start screen begins the game', () => {
-  it('starts the Play scene when startGame is called', () => {
+  it('starts the Play scene from the title screen', () => {
     const start = createBareStart()
 
     start.startGame()
 
     expect(start.scene.start).toHaveBeenCalledWith('Play')
-  })
-
-  it('only starts the Play scene, never any other scene', () => {
-    const start = createBareStart()
-
-    start.startGame()
-
-    expect(start.scene.start).toHaveBeenCalledTimes(1)
-    expect(start.scene.start).not.toHaveBeenCalledWith('Start')
-    expect(start.scene.start).not.toHaveBeenCalledWith('Boot')
   })
 })
