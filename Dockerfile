@@ -1,14 +1,14 @@
 # ---------- Builder ----------
-FROM node:20-alpine AS builder
+FROM node:26-alpine AS builder
 
-RUN apk add --no-cache git
+RUN apk add --no-cache git python3 make g++ cairo-dev jpeg-dev pango-dev giflib-dev librsvg-dev
 ENV PNPM_HOME="/root/.local/share/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN npm install --global pnpm@11.20.0
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 
 COPY . .
@@ -16,15 +16,15 @@ RUN pnpm run typecheck && pnpm run build
 
 
 # ---------- Producción ----------
-FROM node:20-alpine AS production
+FROM node:26-alpine AS production
 
-RUN apk add --no-cache curl
+RUN apk add --no-cache curl python3 make g++ cairo-dev jpeg-dev pango-dev giflib-dev librsvg-dev
 ENV NODE_ENV=production
 ENV PNPM_HOME="/home/node/.local/share/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 ENV PORT=8080
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN npm install --global pnpm@11.20.0
 
 # Usuario sin privilegios
 RUN adduser -D -u 10001 nodeuser
@@ -33,7 +33,7 @@ USER 10001
 WORKDIR /app
 
 # Necesitamos vite (devDeps) porque usaremos "vite preview"
-COPY --chown=nodeuser:nodeuser package.json pnpm-lock.yaml ./
+COPY --chown=nodeuser:nodeuser package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile --prod=false
 
 # Copiamos el build
