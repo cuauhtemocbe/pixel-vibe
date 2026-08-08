@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { PLAYER_SPEED, JUMP_VELOCITY, WORLD_WIDTH, WORLD_HEIGHT } from "../config/gameConfig";
+import { PLAYER_SPEED, JUMP_VELOCITY, WORLD_WIDTH, WORLD_HEIGHT, COYOTE_TIME_MS, JUMP_BUFFER_MS } from "../config/gameConfig";
 
 export default class Play extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -11,6 +11,11 @@ export default class Play extends Phaser.Scene {
   private currentCharacter: 'owlet' | 'dude' = 'owlet';
   private wasTransformPressed: boolean = false;
   private mobileInputHandler?: (event: any) => void;
+
+  // Jump feel: coyote time (grace period after leaving ground) + jump buffering (early press remembered until landing)
+  private coyoteTimer: number = 0;
+  private jumpBufferTimer: number = 0;
+  private wasJumpPressed: boolean = false;
   
   // Mobile input state
   private mobileInput = {
@@ -190,9 +195,18 @@ export default class Play extends Phaser.Scene {
       this.player.play(`${this.currentCharacter}_idle`, true);
     }
 
-    if (jump && onFloor) {
+    this.coyoteTimer = onFloor ? COYOTE_TIME_MS : Math.max(0, this.coyoteTimer - dt);
+
+    const jumpPressedThisFrame = jump && !this.wasJumpPressed;
+    this.jumpBufferTimer = jumpPressedThisFrame ? JUMP_BUFFER_MS : Math.max(0, this.jumpBufferTimer - dt);
+
+    if (this.jumpBufferTimer > 0 && this.coyoteTimer > 0) {
       body.setVelocityY(JUMP_VELOCITY);
+      this.jumpBufferTimer = 0;
+      this.coyoteTimer = 0;
     }
+
+    this.wasJumpPressed = jump;
 
     // Handle character transformation
     if (transform && !this.wasTransformPressed) {
