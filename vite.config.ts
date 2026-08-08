@@ -13,8 +13,8 @@ export default defineConfig({
     minify: 'esbuild',
     rollupOptions: {
       output: {
-        manualChunks: {
-          phaser: ['phaser']
+        manualChunks(id) {
+          if (id.includes('phaser')) return 'phaser';
         }
       }
     }
