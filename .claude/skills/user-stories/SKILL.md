@@ -335,7 +335,7 @@ Feature: Geographic coordinate validation
 
 ## Platform and repository detection
 
-Before creating or managing issues, automatically detect the platform, the repository, and verify that the corresponding MCP server is available. Run once per session and cache the values.
+Before creating or managing issues, automatically detect the platform, the repository, and verify that the platform CLI is available and authenticated. Run once per session and cache the values.
 
 ### Step 1: Detect platform and repository
 
@@ -348,32 +348,71 @@ Run `git remote get-url origin` and parse:
 
 Extract `owner` and `repo` from the path (SSH `:<owner>/<repo>.git` or HTTPS `/<owner>/<repo>.git`). Remove `.git` if present. If the platform cannot be determined, ask the user.
 
-### Step 2: Verify MCP server is available
+### Step 2: Use the platform CLI (preferred)
 
-Use `ToolSearch` to look for MCP tools for the detected platform:
+Prefer the platform's official CLI over an MCP server:
 
-- **GitHub** → search `+github issue`
-- **GitLab** → search `+gitlab issue`
+| Platform | CLI    | Auth check          |
+| -------- | ------ | ------------------- |
+| GitHub   | `gh`   | `gh auth status`    |
+| GitLab   | `glab` | `glab auth status`  |
 
-If tools are found → use them directly. Cache the found tool names.
+If the CLI is installed and authenticated → use it. It needs no per-session
+configuration, works identically across every repo, and its failures are legible
+(a non-zero exit and a real error message) rather than a silent tool absence.
 
-### Step 3: If the MCP server is NOT available
+**Always pass issue bodies with `--body-file`, never `--body`.** Story bodies contain
+fenced Gherkin blocks, pipe tables, backticks and non-ASCII text; inlining them into a
+shell argument invites quoting and escaping corruption. Write the body to a scratchpad
+file first, then:
 
-Do not attempt to use CLI as a fallback. Instead:
+```bash
+gh issue create \
+  --title "<title>" \
+  --body-file /path/to/body.md \
+  --milestone "<milestone title>" \
+  --label <label> --label <label>
+```
 
-1. Do a `WebSearch` with query: `"MCP server <platform> Claude Code setup"` (e.g.: `"MCP server GitHub Claude Code setup"`)
-2. Show the user the configuration command to copy and paste. Example:
+Verify after creating, do not assume — list the issues back and confirm the titles,
+labels and milestone landed as intended:
+
+```bash
+gh issue list --milestone "<milestone title>" \
+  --json number,title,labels \
+  --jq '.[] | "#\(.number)  \(.title)  [\(.labels|map(.name)|join(", "))]"'
+```
+
+Cross-references between stories can only be written once the issue numbers exist.
+Create the issues first, then `gh issue edit <n> --body-file <updated>` to fill in
+`**Depends on:** #N` / `**Blocks:** #N` lines. Do not leave placeholder text in a
+published body.
+
+### Step 3: If the CLI is unavailable
+
+Fall back in this order:
+
+1. **MCP server** — use `ToolSearch` to look for tools for the detected platform
+   (`+github issue` / `+gitlab issue`). If found, use them and cache the tool names.
+2. **Ask the user to install the CLI.** Show the command and stop; do not continue with
+   issue creation.
 
 ```
-I could not find the <GitHub|GitLab> MCP server configured.
-To enable it, run:
+I could not find the <gh|glab> CLI installed or authenticated, and no
+<GitHub|GitLab> MCP server is configured.
 
-<installation command obtained from WebSearch>
+To enable the CLI:
+  <install command for the platform>
+  <gh|glab> auth login
 
-After configuring it, ask me to create the issue again.
+Since `gh auth login` is interactive, run it yourself — type `! gh auth login`
+in the prompt so its output lands in this session.
+
+Once authenticated, ask me to create the issues again.
 ```
 
-3. **Do not continue** with issue creation until the MCP is configured.
+**If the user explicitly asks for one mechanism over the other, honor that** — an
+explicit instruction outranks this default.
 
 ---
 
@@ -483,7 +522,8 @@ Then ...
 
 Automatically assign labels based on the story context. Do not ask the user — infer from the content.
 
-1. **Get existing labels** from the repository (once per session) using the MCP labels tool.
+1. **Get existing labels** from the repository (once per session) — `gh label list` /
+   `glab label list`.
 2. **Infer type** (mutually exclusive):
 
 | Signal in the story                                                      | Common labels            |
@@ -501,9 +541,16 @@ Automatically assign labels based on the story context. Do not ask the user — 
 2. Run the Dry-Run Review Gate — rewrite any scenario marked "Not feasible as written", fold in any newly found gaps, draft a follow-up story if warranted
 3. Show the story (plus dry-run findings and any follow-up draft) to the user for validation
 4. Ask: "Should I create it as an issue?" (and, separately, whether to publish the follow-up story too)
-5. Detect platform and verify MCP (if not done before)
-6. Create the issue(s) with the corresponding MCP tool (use detected `owner` and `repo`)
-7. Return the issue number(s) and URL(s)
+5. Detect platform and verify the CLI is authenticated (if not done before)
+6. Create the milestone first if the stories belong to one, so issues can be filed
+   straight into it
+7. Write each body to a scratchpad file, then create the issue(s) with
+   `--body-file` (use detected `owner` and `repo` if the CLI is not already
+   scoped to the right repo)
+8. Fill in cross-references (`Depends on` / `Blocks`) with `gh issue edit` now that
+   the numbers exist
+9. List the issues back to verify title, labels and milestone, then return the issue
+   number(s) and URL(s)
 
 ### Create multiple issues (backlog)
 
@@ -550,8 +597,9 @@ When the user asks to close an issue that has already been resolved, **do not cl
 
 1. Draft the closing comment with the summary and evidence
 2. Show it to the user for validation
-3. If accepted, add the comment using the MCP comments tool
-4. Close the issue using the MCP update/close tool
+3. If accepted, add the comment — `gh issue comment <n> --body-file <file>` /
+   `glab issue note <n>`
+4. Close the issue — `gh issue close <n>` / `glab issue close <n>`
 
 ---
 
