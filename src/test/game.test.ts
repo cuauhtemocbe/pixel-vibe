@@ -1,4 +1,13 @@
 import { describe, it, expect, vi } from 'vitest'
+import {
+  GAME_WIDTH,
+  GAME_HEIGHT,
+  GRAVITY_Y,
+  PLAYER_SPEED,
+  JUMP_VELOCITY,
+  WORLD_WIDTH,
+  WORLD_HEIGHT
+} from '../config/gameConfig'
 
 // Mock Phaser for integration tests
 vi.mock('phaser', () => ({
@@ -20,18 +29,11 @@ vi.mock('phaser', () => ({
 
 describe('Game Configuration', () => {
   it('should have correct game dimensions', () => {
-    // Test the game constants that would be used in main.ts
-    const GAME_WIDTH = 320
-    const GAME_HEIGHT = 180
-
     expect(GAME_WIDTH).toBe(320)
     expect(GAME_HEIGHT).toBe(180)
   })
 
   it('should have proper game config structure', () => {
-    const GAME_WIDTH = 320
-    const GAME_HEIGHT = 180
-
     const config = {
       type: 'AUTO',
       parent: 'game',
@@ -42,7 +44,7 @@ describe('Game Configuration', () => {
       roundPixels: true,
       physics: {
         default: 'arcade',
-        arcade: { gravity: { x: 0, y: 800 }, debug: false }
+        arcade: { gravity: { x: 0, y: GRAVITY_Y }, debug: false }
       },
       scale: {
         mode: 'FIT',
@@ -60,19 +62,12 @@ describe('Game Configuration', () => {
 
 describe('Game Constants', () => {
   it('should have correct physics constants', () => {
-    const PLAYER_SPEED = 90
-    const JUMP_VELOCITY = -220
-    const GRAVITY = 800
-
     expect(PLAYER_SPEED).toBeGreaterThan(0)
     expect(JUMP_VELOCITY).toBeLessThan(0) // Jump should be negative velocity
-    expect(GRAVITY).toBeGreaterThan(0)
+    expect(GRAVITY_Y).toBeGreaterThan(0)
   })
 
   it('should have reasonable world bounds', () => {
-    const WORLD_WIDTH = 1000
-    const WORLD_HEIGHT = 180
-
     expect(WORLD_WIDTH).toBeGreaterThan(320) // Wider than screen
     expect(WORLD_HEIGHT).toBe(180) // Same as screen height
   })

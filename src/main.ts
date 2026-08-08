@@ -1,9 +1,7 @@
 import Phaser from "phaser";
 import Boot from "@scenes/Boot";
 import Play from "@scenes/Play";
-
-const GAME_WIDTH = 320;
-const GAME_HEIGHT = 180;
+import { GAME_WIDTH, GAME_HEIGHT, GRAVITY_X, GRAVITY_Y } from "./config/gameConfig";
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -15,7 +13,7 @@ const config: Phaser.Types.Core.GameConfig = {
   roundPixels: true,
   physics: {
     default: "arcade",
-    arcade: { gravity: { x: 0, y: 800 }, debug: false }
+    arcade: { gravity: { x: GRAVITY_X, y: GRAVITY_Y }, debug: false }
   },
   scale: {
     mode: Phaser.Scale.FIT,

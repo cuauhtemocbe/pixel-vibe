@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { PLAYER_SPEED, JUMP_VELOCITY, WORLD_WIDTH, WORLD_HEIGHT } from "../config/gameConfig";
 
 export default class Play extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -55,8 +56,8 @@ export default class Play extends Phaser.Scene {
       this.tKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T);
     }
 
-    this.physics.world.setBounds(0, 0, 1000, 180);
-    this.cameras.main.setBounds(0, 0, 1000, 180);
+    this.physics.world.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+    this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
     
     // Setup mobile input listeners
     this.setupMobileInputListeners();
@@ -176,13 +177,12 @@ export default class Play extends Phaser.Scene {
     const jump = keyboardJump || this.mobileInput.jump || this.mobileInput.up;
     const transform = keyboardTransform || this.mobileInput.transform;
 
-    const speed = 90;
     if (left && !right) {
-      body.setVelocityX(-speed);
+      body.setVelocityX(-PLAYER_SPEED);
       this.player.setFlipX(true);
       this.player.play(`${this.currentCharacter}_walk`, true);
     } else if (right && !left) {
-      body.setVelocityX(speed);
+      body.setVelocityX(PLAYER_SPEED);
       this.player.setFlipX(false);
       this.player.play(`${this.currentCharacter}_walk`, true);
     } else {
@@ -191,7 +191,7 @@ export default class Play extends Phaser.Scene {
     }
 
     if (jump && onFloor) {
-      body.setVelocityY(-220);
+      body.setVelocityY(JUMP_VELOCITY);
     }
 
     // Handle character transformation
