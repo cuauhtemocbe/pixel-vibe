@@ -40,6 +40,9 @@ export default class Boot extends Phaser.Scene {
 
   create() {
     createCharacterAnimations(this);
-    this.scene.start("Start");
+    const targetScene = new URLSearchParams(window.location.search).has("asset-spike")
+      ? "AssetSpike"
+      : "Start";
+    this.scene.start(targetScene);
   }
 }
