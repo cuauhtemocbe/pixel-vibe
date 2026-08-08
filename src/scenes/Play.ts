@@ -1,173 +1,191 @@
 import Phaser from "phaser";
-import { PLAYER_SPEED, JUMP_VELOCITY, WORLD_WIDTH, WORLD_HEIGHT, COYOTE_TIME_MS, JUMP_BUFFER_MS } from "../config/gameConfig";
+import {
+  COYOTE_TIME_MS,
+  DOUBLE_JUMP_VELOCITY,
+  ENEMY_PATROL_DISTANCE,
+  ENEMY_SCORE,
+  ENEMY_SPEED,
+  JUMP_BUFFER_MS,
+  JUMP_VELOCITY,
+  PLAYER_SPEED,
+  WATER_END_X,
+  WATER_START_X,
+  WORLD_HEIGHT,
+  WORLD_WIDTH
+} from "../config/gameConfig";
+
+type CharacterForm = "owlet" | "dude" | "turtle";
 
 export default class Play extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   private spaceKey!: Phaser.Input.Keyboard.Key;
   private tKey!: Phaser.Input.Keyboard.Key;
-  
-  // Player transformation state
-  private currentCharacter: 'owlet' | 'dude' = 'owlet';
-  private wasTransformPressed: boolean = false;
-  private mobileInputHandler?: (event: any) => void;
-
-  // Jump feel: coyote time (grace period after leaving ground) + jump buffering (early press remembered until landing)
-  private coyoteTimer: number = 0;
-  private jumpBufferTimer: number = 0;
-  private wasJumpPressed: boolean = false;
-  
-  // Mobile input state
-  private mobileInput = {
-    left: false,
-    right: false,
-    up: false,
-    down: false,
-    jump: false,
-    transform: false
-  };
+  private currentCharacter: CharacterForm = "owlet";
+  private wasTransformPressed = false;
+  private mobileInputHandler?: (event: Event) => void;
+  private coyoteTimer = 0;
+  private jumpBufferTimer = 0;
+  private wasJumpPressed = false;
+  private jumpsUsed = 0;
+  private score = 0;
+  private scoreText!: Phaser.GameObjects.Text;
+  private enemies!: Phaser.Physics.Arcade.Group;
+  private mobileInput = { left: false, right: false, up: false, down: false, jump: false, transform: false };
 
   constructor() {
     super("Play");
   }
 
   create() {
-    this.add.rectangle(0, 0, 10000, 10000, 0x101820, 1).setOrigin(0);
+    this.add.rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0x173847).setOrigin(0);
+    this.add.rectangle(0, 88, WORLD_WIDTH, 92, 0x2a5b3f).setOrigin(0);
+    this.add.rectangle(WATER_START_X, 118, WATER_END_X - WATER_START_X, 52, 0x287da3).setOrigin(0).setDepth(1);
+    this.add.rectangle(WATER_START_X, 116, WATER_END_X - WATER_START_X, 3, 0x74d1d3).setOrigin(0).setDepth(2);
+    this.createVegetation();
+
     const ground = this.physics.add.staticGroup();
-    // Create ground that spans the entire world width (1000 units)
-    ground.create(500, 170, "tiles").setScale(31.25, 1).refreshBody();
+    ground.create(WORLD_WIDTH / 2, 170, "tiles").setScale(WORLD_WIDTH / 32, 1).refreshBody();
 
-    this.player = this.physics.add
-      .sprite(80, 120, "owlet_idle", 0)
-      .setScale(1)
-      .setCollideWorldBounds(true)
-      .setDepth(10);
-
-    this.physics.add.collider(this.player, ground);
-
-    // Character animations are registered once by Boot.create() via createCharacterAnimations()
-
-    // Start with idle animation
+    this.player = this.physics.add.sprite(80, 120, "owlet_idle", 0).setScale(1).setCollideWorldBounds(true).setDepth(10);
+    this.physics.add.collider(this.player, ground, () => this.jumpsUsed = 0);
     this.player.play("owlet_idle");
 
+    this.enemies = this.physics.add.group();
+    this.createEnemy(390);
+    this.createEnemy(820);
+    this.physics.add.collider(this.enemies, ground);
+    this.physics.add.collider(this.player, this.enemies, this.handleEnemyContact as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback, undefined, this);
+
+    this.scoreText = this.add.text(8, 8, "SCORE 0", { fontSize: "8px", color: "#ffffff", backgroundColor: "#10232dcc", padding: { x: 4, y: 3 } }).setScrollFactor(0).setDepth(20);
     this.cameras.main.setRoundPixels(true);
     this.cameras.main.startFollow(this.player, true, 1, 1);
+    this.physics.world.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+    this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 
-    // Add null check for keyboard input
     if (this.input.keyboard) {
       this.cursors = this.input.keyboard.createCursorKeys();
       this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
       this.tKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T);
     }
-
-    this.physics.world.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
-    this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
-    
-    // Setup mobile input listeners
     this.setupMobileInputListeners();
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.removeMobileInputListeners, this);
   }
-  
-  private transformCharacter() {
-    // Switch between characters
-    this.currentCharacter = this.currentCharacter === 'owlet' ? 'dude' : 'owlet';
-    
-    // Update the player sprite texture to match the new character
-    const currentFrame = this.player.frame.name;
-    this.player.setTexture(`${this.currentCharacter}_idle`, 0);
-    
-    // Play the appropriate idle animation for the new character
-    this.player.play(`${this.currentCharacter}_idle`);
+
+  private createVegetation() {
+    for (let index = 0; index < 12; index += 1) {
+      const x = 35 + index * 88;
+      const background = this.add.rectangle(x, 74 - (index % 3) * 8, 10, 38, 0x1c473b).setOrigin(0.5, 1).setDepth(0).setScrollFactor(0.55);
+      const foreground = this.add.ellipse(x + 20, 125 - (index % 2) * 5, 18, 34, 0x76a84e).setDepth(4);
+      this.tweens.add({ targets: background, angle: index % 2 ? 2 : -2, duration: 1100 + index * 30, yoyo: true, repeat: -1, ease: "Sine.inOut" });
+      this.tweens.add({ targets: foreground, angle: index % 2 ? -3 : 3, duration: 800 + index * 25, yoyo: true, repeat: -1, ease: "Sine.inOut" });
+    }
   }
-  
+
+  private createEnemy(x: number) {
+    const enemy = this.enemies.create(x, 135, "dude_idle", 0) as Phaser.Physics.Arcade.Sprite;
+    enemy.setScale(0.75).setTint(0xd45d5d).setDepth(8);
+    enemy.setData("originX", x);
+    enemy.setData("direction", 1);
+    enemy.play("dude_idle");
+  }
+
+  private handleEnemyContact(_player: unknown, enemyObject: unknown) {
+    const enemy = enemyObject as Phaser.Physics.Arcade.Sprite;
+    const body = this.player.body as Phaser.Physics.Arcade.Body;
+    if (body.velocity.y > 0 && this.player.y < enemy.y - 5) {
+      enemy.disableBody(true, true);
+      this.addScore(ENEMY_SCORE);
+      body.setVelocityY(JUMP_VELOCITY / 2);
+      return;
+    }
+    body.setVelocityX(this.player.x < enemy.x ? -PLAYER_SPEED : PLAYER_SPEED);
+    body.setVelocityY(JUMP_VELOCITY / 2);
+  }
+
+  private addScore(points: number) {
+    this.score = Math.max(0, this.score + points);
+    this.scoreText?.setText(`SCORE ${this.score}`);
+  }
+
+  private transformCharacter() {
+    this.currentCharacter = this.currentCharacter === "owlet" ? "dude" : this.currentCharacter === "dude" ? "turtle" : "owlet";
+    this.player.setTexture(this.currentCharacter === "turtle" ? "dude_idle" : `${this.currentCharacter}_idle`, 0);
+    this.player.setTint(this.currentCharacter === "turtle" ? 0x4ca9d1 : 0xffffff);
+    this.player.play(`${this.currentCharacter === "turtle" ? "dude" : this.currentCharacter}_idle`);
+    this.jumpsUsed = 0;
+  }
+
   private setupMobileInputListeners() {
-    // Listen for custom mobile input events
-    this.mobileInputHandler = this.mobileInputHandler ?? ((event: any) => this.handleMobileInputEvent(event));
-    window.addEventListener('mobileInput', this.mobileInputHandler);
+    this.mobileInputHandler = this.mobileInputHandler ?? ((event: Event) => this.handleMobileInputEvent(event as CustomEvent));
+    window.addEventListener("mobileInput", this.mobileInputHandler);
   }
 
   private removeMobileInputListeners() {
-    if (!this.mobileInputHandler) return;
-    window.removeEventListener('mobileInput', this.mobileInputHandler);
+    if (this.mobileInputHandler) window.removeEventListener("mobileInput", this.mobileInputHandler);
   }
 
-  private handleMobileInputEvent(event: any) {
+  private handleMobileInputEvent(event: CustomEvent<{ key: string; pressed: boolean }>) {
     const { key, pressed } = event.detail;
-
-    // Debug logging
-    console.log(`Mobile input received: ${key} ${pressed ? 'pressed' : 'released'}`);
-
-    switch (key) {
-      case 'ArrowLeft':
-        this.mobileInput.left = pressed;
-        break;
-      case 'ArrowRight':
-        this.mobileInput.right = pressed;
-        break;
-      case 'ArrowUp':
-        this.mobileInput.up = pressed;
-        break;
-      case 'ArrowDown':
-        this.mobileInput.down = pressed;
-        break;
-      case 'Space':
-        this.mobileInput.jump = pressed;
-        break;
-      case 'KeyT':
-        this.mobileInput.transform = pressed;
-        break;
-    }
+    if (key === "ArrowLeft") this.mobileInput.left = pressed;
+    if (key === "ArrowRight") this.mobileInput.right = pressed;
+    if (key === "ArrowUp") this.mobileInput.up = pressed;
+    if (key === "ArrowDown") this.mobileInput.down = pressed;
+    if (key === "Space") this.mobileInput.jump = pressed;
+    if (key === "KeyT") this.mobileInput.transform = pressed;
   }
 
   update(_: number, dt: number) {
+    if (!this.player) return;
+    this.jumpsUsed ??= 0;
     const body = this.player.body as Phaser.Physics.Arcade.Body;
     const onFloor = body.blocked.down || body.touching.down;
+    const left = (this.cursors?.left?.isDown ?? false) || this.mobileInput.left;
+    const right = (this.cursors?.right?.isDown ?? false) || this.mobileInput.right;
+    const jump = (this.cursors?.up?.isDown || this.cursors?.space?.isDown || this.spaceKey?.isDown || this.mobileInput.jump || this.mobileInput.up) ?? false;
+    const transform = (this.tKey?.isDown ?? false) || this.mobileInput.transform;
+    const inWater = this.player.x >= WATER_START_X && this.player.x <= WATER_END_X;
+    const swimming = inWater && this.currentCharacter === "turtle";
 
-    // Get input from both keyboard and mobile controls
-    const keyboardLeft = this.cursors?.left?.isDown ?? false;
-    const keyboardRight = this.cursors?.right?.isDown ?? false;
-    const keyboardJump = (this.cursors?.up?.isDown || this.cursors?.space?.isDown || this.spaceKey?.isDown) ?? false;
-    const keyboardTransform = this.tKey?.isDown ?? false;
-    
-    // Combine keyboard and mobile input
-    const left = keyboardLeft || this.mobileInput.left;
-    const right = keyboardRight || this.mobileInput.right;
-    const jump = keyboardJump || this.mobileInput.jump || this.mobileInput.up;
-    const transform = keyboardTransform || this.mobileInput.transform;
-
-    if (left && !right) {
-      body.setVelocityX(-PLAYER_SPEED);
-      this.player.setFlipX(true);
-      this.player.play(`${this.currentCharacter}_walk`, true);
-    } else if (right && !left) {
-      body.setVelocityX(PLAYER_SPEED);
-      this.player.setFlipX(false);
-      this.player.play(`${this.currentCharacter}_walk`, true);
+    if (swimming) {
+      body.setGravityY?.(0);
+      body.setVelocityY(((this.mobileInput.down || this.cursors?.down?.isDown) ? 1 : ((this.mobileInput.up || this.cursors?.up?.isDown) ? -1 : 0)) * PLAYER_SPEED);
     } else {
-      body.setVelocityX(0);
-      this.player.play(`${this.currentCharacter}_idle`, true);
+      body.setGravityY?.(800);
+      if (!inWater && this.player.x < WATER_START_X && right && this.player.x + PLAYER_SPEED * (dt / 1000) >= WATER_START_X && this.currentCharacter !== "turtle") body.setVelocityX(0);
+      this.coyoteTimer = onFloor ? COYOTE_TIME_MS : Math.max(0, this.coyoteTimer - dt);
+      const jumpPressedThisFrame = jump && !this.wasJumpPressed;
+      this.jumpBufferTimer = jumpPressedThisFrame ? JUMP_BUFFER_MS : Math.max(0, this.jumpBufferTimer - dt);
+      if (this.currentCharacter === "dude" && !onFloor && jumpPressedThisFrame && this.jumpsUsed === 1) {
+        body.setVelocityY(DOUBLE_JUMP_VELOCITY);
+        this.jumpsUsed = 2;
+        this.jumpBufferTimer = 0;
+      } else if (this.jumpBufferTimer > 0 && (this.coyoteTimer > 0 || onFloor) && this.jumpsUsed === 0) {
+        body.setVelocityY(JUMP_VELOCITY);
+        this.jumpsUsed = 1;
+        this.jumpBufferTimer = 0;
+        this.coyoteTimer = 0;
+      }
     }
 
-    this.coyoteTimer = onFloor ? COYOTE_TIME_MS : Math.max(0, this.coyoteTimer - dt);
-
-    const jumpPressedThisFrame = jump && !this.wasJumpPressed;
-    this.jumpBufferTimer = jumpPressedThisFrame ? JUMP_BUFFER_MS : Math.max(0, this.jumpBufferTimer - dt);
-
-    if (this.jumpBufferTimer > 0 && this.coyoteTimer > 0) {
-      body.setVelocityY(JUMP_VELOCITY);
-      this.jumpBufferTimer = 0;
-      this.coyoteTimer = 0;
-    }
-
+    if (left && !right) { body.setVelocityX(-PLAYER_SPEED); this.player.setFlipX(true); }
+    else if (right && !left) { body.setVelocityX(PLAYER_SPEED); this.player.setFlipX(false); }
+    else if (!swimming) body.setVelocityX(0);
+    if (inWater && this.currentCharacter !== "turtle") this.player.x = Math.min(this.player.x, WATER_START_X - 1);
     this.wasJumpPressed = jump;
-
-    // Handle character transformation
-    if (transform && !this.wasTransformPressed) {
-      this.transformCharacter();
-    }
+    if (transform && !this.wasTransformPressed) this.transformCharacter();
     this.wasTransformPressed = transform;
 
-    // Remove the Math.round() calls that cause jittery movement
-    // The camera already handles pixel rounding with setRoundPixels(true)
+    this.enemies?.children.forEach((child) => {
+      const enemy = child as Phaser.Physics.Arcade.Sprite;
+      if (!enemy.active) return;
+      const originX = enemy.getData("originX") as number;
+      let direction = enemy.getData("direction") as number;
+      if (enemy.x >= originX + ENEMY_PATROL_DISTANCE) direction = -1;
+      if (enemy.x <= originX - ENEMY_PATROL_DISTANCE) direction = 1;
+      enemy.setData("direction", direction);
+      (enemy.body as Phaser.Physics.Arcade.Body).setVelocityX(direction * ENEMY_SPEED);
+    });
+    if (onFloor) this.jumpsUsed = 0;
   }
 }
