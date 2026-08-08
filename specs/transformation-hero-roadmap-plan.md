@@ -2,7 +2,7 @@
 
 **Spec**: `specs/transformation-hero-roadmap.md`  
 **Created**: 2026-08-08  
-**Status**: in-progress
+**Status**: completed
 
 ## Components
 
@@ -34,10 +34,10 @@
 ## Tasks
 
 - [x] Create the consolidated spec and plan.
-- [ ] Replace the start screen character cycle with the animated title.
-- [ ] Add forest, water, vegetation, form-specific movement, and enemy interactions.
-- [ ] Add score HUD and rule tests.
-- [ ] Verify, commit, open PR, merge, and close #25-#31.
+- [x] Replace the start screen character cycle with the animated title.
+- [x] Add forest, water, vegetation, form-specific movement, and enemy interactions.
+- [x] Add score HUD and rule tests.
+- [x] Verify, commit, open PR #32, merge, and close #25-#31.
 
 ## Effort Estimate
 

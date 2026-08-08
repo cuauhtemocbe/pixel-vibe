@@ -1,6 +1,6 @@
 ---
 title: Transformation Hero gameplay roadmap
-status: in-progress
+status: completed
 created: 2026-08-08
 updated: 2026-08-08
 issues: "#25, #26, #27, #28, #29, #30, #31"
@@ -61,10 +61,10 @@ Issues #25 through #31 are the source user stories and acceptance criteria.
 
 ## Success Criteria
 
-- [ ] All seven issues have implementation evidence in the merged PR.
-- [ ] Automated tests cover the acceptance-critical form, water, enemy, score, and start-screen rules.
-- [ ] Typecheck, build, and test suite pass.
-- [ ] Each issue is closed after the PR merges.
+- [x] All seven issues have implementation evidence in merged PR #32.
+- [x] Automated tests cover the acceptance-critical form, water, enemy, score, and start-screen rules.
+- [x] Typecheck, build, and test suite pass.
+- [x] Each issue is closed after the PR merges.
 
 ## Implementation Plan
 
