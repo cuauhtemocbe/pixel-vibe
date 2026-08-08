@@ -9,6 +9,7 @@ export default class Play extends Phaser.Scene {
   // Player transformation state
   private currentCharacter: 'owlet' | 'dude' = 'owlet';
   private wasTransformPressed: boolean = false;
+  private mobileInputHandler?: (event: any) => void;
   
   // Mobile input state
   private mobileInput = {
@@ -59,6 +60,7 @@ export default class Play extends Phaser.Scene {
     
     // Setup mobile input listeners
     this.setupMobileInputListeners();
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.removeMobileInputListeners, this);
   }
   
   private createCharacterAnimations() {
@@ -121,33 +123,41 @@ export default class Play extends Phaser.Scene {
   
   private setupMobileInputListeners() {
     // Listen for custom mobile input events
-    window.addEventListener('mobileInput', (event: any) => {
-      const { action, key, pressed } = event.detail;
-      
-      // Debug logging
-      console.log(`Mobile input received: ${key} ${pressed ? 'pressed' : 'released'}`);
-      
-      switch (key) {
-        case 'ArrowLeft':
-          this.mobileInput.left = pressed;
-          break;
-        case 'ArrowRight':
-          this.mobileInput.right = pressed;
-          break;
-        case 'ArrowUp':
-          this.mobileInput.up = pressed;
-          break;
-        case 'ArrowDown':
-          this.mobileInput.down = pressed;
-          break;
-        case 'Space':
-          this.mobileInput.jump = pressed;
-          break;
-        case 'KeyT':
-          this.mobileInput.transform = pressed;
-          break;
-      }
-    });
+    this.mobileInputHandler = this.mobileInputHandler ?? ((event: any) => this.handleMobileInputEvent(event));
+    window.addEventListener('mobileInput', this.mobileInputHandler);
+  }
+
+  private removeMobileInputListeners() {
+    if (!this.mobileInputHandler) return;
+    window.removeEventListener('mobileInput', this.mobileInputHandler);
+  }
+
+  private handleMobileInputEvent(event: any) {
+    const { key, pressed } = event.detail;
+
+    // Debug logging
+    console.log(`Mobile input received: ${key} ${pressed ? 'pressed' : 'released'}`);
+
+    switch (key) {
+      case 'ArrowLeft':
+        this.mobileInput.left = pressed;
+        break;
+      case 'ArrowRight':
+        this.mobileInput.right = pressed;
+        break;
+      case 'ArrowUp':
+        this.mobileInput.up = pressed;
+        break;
+      case 'ArrowDown':
+        this.mobileInput.down = pressed;
+        break;
+      case 'Space':
+        this.mobileInput.jump = pressed;
+        break;
+      case 'KeyT':
+        this.mobileInput.transform = pressed;
+        break;
+    }
   }
 
   update(_: number, dt: number) {
