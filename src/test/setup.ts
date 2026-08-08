@@ -112,7 +112,7 @@ HTMLCanvasElement.prototype.getContext = vi.fn((type: string) => {
     return {
       fillRect: vi.fn(),
       clearRect: vi.fn(),
-      getImageData: vi.fn(),
+      getImageData: vi.fn(() => ({ data: new Uint8ClampedArray(4) })),
       putImageData: vi.fn(),
       createImageData: vi.fn(() => []),
       setTransform: vi.fn(),
