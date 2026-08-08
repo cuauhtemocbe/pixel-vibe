@@ -38,6 +38,7 @@ export default class Play extends Phaser.Scene {
   }
 
   create() {
+    this.game.canvas?.parentElement?.setAttribute("data-scene", "play");
     this.add.rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0x173847).setOrigin(0);
     this.add.rectangle(0, 88, WORLD_WIDTH, 92, 0x2a5b3f).setOrigin(0);
     this.add.rectangle(WATER_START_X, 118, WATER_END_X - WATER_START_X, 52, 0x287da3).setOrigin(0).setDepth(1);

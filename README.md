@@ -77,6 +77,15 @@ pnpm preview
 # Type checking
 pnpm typecheck
 
+# Install the Chromium browser used by Playwright (once per machine)
+pnpm exec playwright install chromium
+
+# Run browser and visual regression tests
+pnpm test:e2e
+
+# Update visual baselines intentionally
+pnpm test:e2e:update
+
 # Clean node_modules and pnpm store
 pnpm clean
 
@@ -86,6 +95,12 @@ pnpm reinstall
 # Validate deployment
 pnpm run validate
 ```
+
+### Browser Tests
+
+Playwright starts the Vite development server automatically for E2E tests. Visual
+baselines are stored under `e2e/*-snapshots/` and should be reviewed whenever
+they are intentionally updated.
 
 ## Project Structure
 
