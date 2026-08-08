@@ -1,6 +1,6 @@
 ---
 title: Playwright Visual Regression Testing
-status: in-progress
+status: completed
 created: 2026-08-08
 updated: 2026-08-08
 issue: #33
@@ -102,7 +102,7 @@ Out of scope for this feature; Playwright startup and rendering are validated fu
 - [x] `pnpm test --run` passes.
 - [x] `pnpm test:e2e` passes all desktop/mobile visual and interaction tests.
 - [x] `pnpm run build` passes.
-- [ ] Pull request checks pass and issue #33 is closed after merge.
+- [x] Pull request checks pass and issue #33 is closed after merge.
 
 ## Implementation Plan
 

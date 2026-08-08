@@ -2,7 +2,7 @@
 
 **Spec**: `specs/playwright-visual-regression.md`
 **Created**: 2026-08-08
-**Status**: in-progress
+**Status**: completed
 
 ## Components
 
@@ -56,7 +56,7 @@
 - [x] Playwright config and scripts are available locally.
 - [x] Desktop/mobile snapshots and Start-to-Play test pass locally.
 - [x] CI installs and runs the browser suite.
-- [ ] PR checks pass and issue #33 is closed.
+- [x] PR checks pass and issue #33 is closed.
 
 ## Tasks
 
