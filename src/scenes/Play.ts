@@ -45,8 +45,7 @@ export default class Play extends Phaser.Scene {
 
     this.physics.add.collider(this.player, ground);
 
-    // Create animations for both characters
-    this.createCharacterAnimations();
+    // Character animations are registered once by Boot.create() via createCharacterAnimations()
 
     // Start with idle animation
     this.player.play("owlet_idle");
@@ -67,52 +66,6 @@ export default class Play extends Phaser.Scene {
     // Setup mobile input listeners
     this.setupMobileInputListeners();
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.removeMobileInputListeners, this);
-  }
-  
-  private createCharacterAnimations() {
-    // Owlet Monster animations
-    this.anims.create({
-      key: "owlet_idle",
-      frames: this.anims.generateFrameNumbers("owlet_idle", { start: 0, end: 3 }),
-      frameRate: 8,
-      repeat: -1
-    });
-
-    this.anims.create({
-      key: "owlet_walk",
-      frames: this.anims.generateFrameNumbers("owlet_walk", { start: 0, end: 5 }),
-      frameRate: 10,
-      repeat: -1
-    });
-
-    this.anims.create({
-      key: "owlet_run",
-      frames: this.anims.generateFrameNumbers("owlet_run", { start: 0, end: 5 }),
-      frameRate: 12,
-      repeat: -1
-    });
-
-    // Dude Monster animations
-    this.anims.create({
-      key: "dude_idle",
-      frames: this.anims.generateFrameNumbers("dude_idle", { start: 0, end: 3 }),
-      frameRate: 8,
-      repeat: -1
-    });
-
-    this.anims.create({
-      key: "dude_walk",
-      frames: this.anims.generateFrameNumbers("dude_walk", { start: 0, end: 5 }),
-      frameRate: 10,
-      repeat: -1
-    });
-
-    this.anims.create({
-      key: "dude_run",
-      frames: this.anims.generateFrameNumbers("dude_run", { start: 0, end: 5 }),
-      frameRate: 12,
-      repeat: -1
-    });
   }
   
   private transformCharacter() {
