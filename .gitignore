@@ -41,3 +41,7 @@ coverage/
 # Cache directories
 .cache/
 .parcel-cache/
+
+# Claude Code configuration
+.claude/
+CLAUDE.md
