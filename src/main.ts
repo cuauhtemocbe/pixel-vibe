@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import Boot from "@scenes/Boot";
+import Start from "@scenes/Start";
 import Play from "@scenes/Play";
 import { GAME_WIDTH, GAME_HEIGHT, GRAVITY_X, GRAVITY_Y } from "./config/gameConfig";
 
@@ -19,7 +20,7 @@ const config: Phaser.Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
-  scene: [Boot, Play]
+  scene: [Boot, Start, Play]
 };
 
 new Phaser.Game(config);

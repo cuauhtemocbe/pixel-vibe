@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { createCharacterAnimations } from "../animations/characterAnimations";
 
 export default class Boot extends Phaser.Scene {
   constructor() {
@@ -38,6 +39,7 @@ export default class Boot extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start("Play");
+    createCharacterAnimations(this);
+    this.scene.start("Start");
   }
 }
