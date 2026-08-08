@@ -14,6 +14,7 @@ export default class Start extends Phaser.Scene {
   }
 
   create() {
+    this.game.canvas?.parentElement?.setAttribute("data-scene", "start");
     this.drawBackground();
 
     this.titleShadow = this.add

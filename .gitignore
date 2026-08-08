@@ -38,6 +38,10 @@ pnpm-debug.log*
 # Coverage directory
 coverage/
 
+# Playwright artifacts
+test-results/
+playwright-report/
+
 # Cache directories
 .cache/
 .parcel-cache/
