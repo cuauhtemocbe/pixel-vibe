@@ -7,10 +7,9 @@
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
     "paths": {
-      "@scenes/*": ["src/scenes/*"],
-      "@/*": ["src/*"]
+      "@scenes/*": ["./src/scenes/*"],
+      "@/*": ["./src/*"]
     },
     "resolveJsonModule": true,
     "isolatedModules": true,
