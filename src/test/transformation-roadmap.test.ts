@@ -42,6 +42,28 @@ describe('Transformation roadmap gameplay rules', () => {
     expect(play.jumpsUsed).toBe(2)
   })
 
+  it('keeps the double jump after transforming into dude', () => {
+    const play = createPlay()
+    play.currentCharacter = 'owlet'
+    play.player.setTexture = vi.fn()
+    play.player.setTint = vi.fn()
+    play.player.play = vi.fn()
+
+    play.transformCharacter()
+    play.jumpsUsed = 0
+    play.player.body.blocked.down = true
+    play.update(0, 16)
+    play.mobileInput.jump = false
+    play.player.body.blocked.down = false
+    play.update(0, 16)
+    play.mobileInput.jump = true
+    play.update(0, 16)
+
+    expect(play.currentCharacter).toBe('dude')
+    expect(play.player.body.setVelocityY).toHaveBeenCalledWith(DOUBLE_JUMP_VELOCITY)
+    expect(play.jumpsUsed).toBe(2)
+  })
+
   it('preserves the first jump count after leaving the ground', () => {
     const play = createPlay()
     play.jumpsUsed = 0
