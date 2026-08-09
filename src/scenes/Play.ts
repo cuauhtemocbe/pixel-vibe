@@ -31,6 +31,7 @@ export default class Play extends Phaser.Scene {
   private score = 0;
   private scoreText!: Phaser.GameObjects.Text;
   private enemies!: Phaser.Physics.Arcade.Group;
+  private rockBlocks!: Phaser.Physics.Arcade.StaticGroup;
   private mobileInput = { left: false, right: false, up: false, down: false, jump: false, transform: false };
 
   constructor() {
@@ -39,17 +40,22 @@ export default class Play extends Phaser.Scene {
 
   create() {
     this.game.canvas?.parentElement?.setAttribute("data-scene", "play");
+    this.game.canvas?.parentElement?.setAttribute("data-scenario", "forest-rock-water");
     this.add.rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0x173847).setOrigin(0);
     this.add.rectangle(0, 88, WORLD_WIDTH, 92, 0x2a5b3f).setOrigin(0);
+    this.createForestBackdrop();
     this.add.rectangle(WATER_START_X, 118, WATER_END_X - WATER_START_X, 52, 0x287da3).setOrigin(0).setDepth(1);
     this.add.rectangle(WATER_START_X, 116, WATER_END_X - WATER_START_X, 3, 0x74d1d3).setOrigin(0).setDepth(2);
+    this.createWaterSurface();
     this.createVegetation();
 
     const ground = this.physics.add.staticGroup();
     ground.create(WORLD_WIDTH / 2, 170, "tiles").setScale(WORLD_WIDTH / 32, 1).refreshBody();
+    this.createRockBlocks();
 
     this.player = this.physics.add.sprite(80, 120, "owlet_idle", 0).setScale(1).setCollideWorldBounds(true).setDepth(10);
     this.physics.add.collider(this.player, ground, () => this.jumpsUsed = 0);
+    this.physics.add.collider(this.player, this.rockBlocks, () => this.jumpsUsed = 0);
     this.player.play("owlet_idle");
 
     this.enemies = this.physics.add.group();
@@ -71,6 +77,29 @@ export default class Play extends Phaser.Scene {
     }
     this.setupMobileInputListeners();
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.removeMobileInputListeners, this);
+  }
+
+  private createForestBackdrop() {
+    for (let x = 18; x < WORLD_WIDTH; x += 54) {
+      this.add.image(x, 78, "kenney_forest").setDisplaySize(36, 36).setAlpha(0.8).setDepth(-1);
+    }
+  }
+
+  private createWaterSurface() {
+    for (let x = WATER_START_X + 9; x < WATER_END_X; x += 27) {
+      this.add.image(x, 116, "kenney_water").setDisplaySize(18, 8).setDepth(3);
+    }
+  }
+
+  private createRockBlocks() {
+    this.rockBlocks = this.physics.add.staticGroup();
+    [280, 470].forEach((x) => {
+      const block = this.rockBlocks.create(x, 144, "kenney_rock")
+        .setDisplaySize(36, 24)
+        .setName("rock-block")
+        .setDepth(6);
+      block.refreshBody();
+    });
   }
 
   private createVegetation() {
