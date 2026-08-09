@@ -187,7 +187,7 @@ export default class Play extends Phaser.Scene {
       this.coyoteTimer = onFloor ? COYOTE_TIME_MS : Math.max(0, this.coyoteTimer - dt);
       const jumpPressedThisFrame = jump && !this.wasJumpPressed;
       this.jumpBufferTimer = jumpPressedThisFrame ? JUMP_BUFFER_MS : Math.max(0, this.jumpBufferTimer - dt);
-      if (this.currentCharacter === "dude" && !onFloor && jumpPressedThisFrame && this.jumpsUsed === 1) {
+      if (this.currentCharacter === "owlet" && !onFloor && jumpPressedThisFrame && this.jumpsUsed === 1) {
         body.setVelocityY(DOUBLE_JUMP_VELOCITY);
         this.jumpsUsed = 2;
         this.jumpBufferTimer = 0;

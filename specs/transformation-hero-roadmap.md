@@ -22,7 +22,7 @@ The current game has a flat platform, two animated forms, and basic movement. Th
 
 - [x] Show `El héroe de la transformación` on the start screen with an animated 3D-style shadow/offset treatment and no character presentation.
 - [x] Render a procedural forest path, a visually distinct water area, and layered vegetation without external assets.
-- [x] Give the `dude` form the white-hero double jump; reset capacity on landing and keep it unavailable to `owlet` and `turtle`.
+- [x] Give the white `owlet` form the double jump; reset capacity on landing and keep it unavailable to `dude` and `turtle`.
 - [x] Give the `turtle` form blue-tinted swimming in water; non-turtle forms are stopped at the water boundary.
 - [x] Spawn deterministic patrol enemies; jumping on one defeats it and awards points, while side contact applies knockback.
 - [x] Keep a non-negative score in a camera-independent HUD; enemy defeats award 100 points.

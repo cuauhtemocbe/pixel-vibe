@@ -8,7 +8,7 @@ import {
 
 function createPlay(): any {
   const play = Object.create(Play.prototype)
-  play.currentCharacter = 'dude'
+  play.currentCharacter = 'owlet'
   play.jumpsUsed = 1
   play.wasJumpPressed = false
   play.coyoteTimer = 0
@@ -33,7 +33,7 @@ function createPlay(): any {
 }
 
 describe('Transformation roadmap gameplay rules', () => {
-  it('allows exactly one additional jump for the dude form', () => {
+  it('allows exactly one additional jump for the white owlet form', () => {
     const play = createPlay()
 
     play.update(0, 16)
@@ -62,8 +62,19 @@ describe('Transformation roadmap gameplay rules', () => {
     expect(play.jumpsUsed).toBe(2)
   })
 
+  it('does not give the blue dude form a double jump', () => {
+    const play = createPlay()
+    play.currentCharacter = 'dude'
+
+    play.update(0, 16)
+
+    expect(play.player.body.setVelocityY).not.toHaveBeenCalled()
+    expect(play.jumpsUsed).toBe(1)
+  })
+
   it('cycles to the turtle form and resets its jump state', () => {
     const play = createPlay()
+    play.currentCharacter = 'dude'
     play.player.setTexture = vi.fn()
     play.player.setTint = vi.fn()
     play.player.play = vi.fn()
