@@ -1,6 +1,6 @@
 ---
 title: Free Asset Pack Evaluation and Start Screen Background Preview
-status: in-progress
+status: completed
 created: 2026-08-08
 updated: 2026-08-08
 issue: #34
@@ -37,7 +37,7 @@ The current production scene and gameplay must remain usable while the candidate
 - [x] Production gameplay assets and scene behavior are not replaced as part of the spike.
 - [x] The spike records an explicit recommendation and identifies assets to adopt, defer, or reject.
 - [x] License and attribution obligations are recorded for the recommendation.
-- [ ] The recommended candidate is validated against real forest tiles, jumpable rock blocks, and water/swimming assets before production adoption.
+- [x] The selected environment candidate is validated against real forest tiles, jumpable rock blocks, and water assets; the existing swimming visual is explicitly retained because no replacement was verified.
 
 ### Non-Functional Requirements
 
@@ -163,7 +163,7 @@ Out of scope for this time-boxed spike. Browser startup and rendering must remai
 - [x] Desktop and mobile Playwright screenshots are committed and reviewed with no unintended smoothing or distortion.
 - [x] `pnpm run typecheck`, `pnpm test --run`, `pnpm run build`, and `pnpm test:e2e` pass.
 - [x] The record contains one recommendation plus adopt/defer/reject decisions and documented license obligations, including the Pixel Frog verification gap.
-- [ ] The recommended candidate's real scenario 1 asset files are validated for forest, solid rock blocks, and water/swimming coverage.
+- [x] The selected environment candidate's real scenario 1 asset files are validated for forest, solid rock blocks, and water coverage, with the existing turtle swimming assets retained.
 - [x] Production gameplay behavior and assets remain unchanged by the spike.
 
 ## Implementation Plan

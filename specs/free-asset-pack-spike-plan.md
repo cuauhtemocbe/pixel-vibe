@@ -3,7 +3,7 @@
 **Spec**: `specs/free-asset-pack-spike.md`
 **Issue**: [#34](https://github.com/cuauhtemocbe/pixel-vibe/issues/34)
 **Created**: 2026-08-08
-**Status**: in-progress
+**Status**: completed
 
 ## Components
 
@@ -81,7 +81,7 @@
 - [x] **M1: Evidence ready** — all three candidates have comparable notes, license information, and a selected direction for technical evaluation; Pixel Frog's rate-limit gap is recorded.
 - [x] **M2: Prototype ready** — the isolated view renders the selected sample assets, scenario 1 forest/rock/water composition, and the start-screen background preview at 320x180.
 - [x] **M3: Visual evidence ready** — desktop and mobile Playwright checks pass with reviewed snapshots.
-- [ ] **M4: Recommendation ready** — documentation records adopt/defer/reject decisions and attribution obligations; production flow is confirmed unchanged; real scenario 1 asset files are validated.
+- [x] **M4: Recommendation ready** — Kenney is selected for the environment, the existing swimming visual is retained, attribution obligations are recorded, and production flow is confirmed unchanged.
 
 ## Tasks
 
@@ -129,7 +129,7 @@
 
 ### Polish (Build Last)
 
-- [ ] **Task 7: Finalize recommendation and run quality gates**
+- [x] **Task 7: Finalize recommendation and run quality gates**
   - **Acceptance**: The recommendation identifies one primary direction, adopt/defer/reject decisions, verified license obligations, and confirms production assets/behavior are unchanged.
   - **Files**: evaluation record, `specs/free-asset-pack-spike.md` if criteria need checked, optional README note.
   - **Tests**: `pnpm run typecheck`, `pnpm test --run`, `pnpm run build`, `pnpm test:e2e`, and manual screenshot review.

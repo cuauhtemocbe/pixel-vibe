@@ -38,14 +38,19 @@ The isolated prototype currently uses the repository's existing runtime-compatib
 
 ## Recommendation
 
-**Primary direction for the scenario 1 environment: Kenney Pixel Platformer.** Its inspected archive verifies forest-compatible environment pieces, solid blocks, water pieces, Tiled examples, `18x18` tiles, and CC0 licensing. It does not provide verified swimming animation coverage, so the production recommendation remains open: validate SunnyLand's actual Phaser project or keep the existing turtle visual while using Kenney for the environment. Pixel Adventure remains deferred until its source page and archive can be inspected.
+**Final decision: use Kenney Pixel Platformer for the scenario 1 environment and retain the existing turtle swimming visual/logic.** Kenney's inspected archive verifies forest-compatible environment pieces, solid blocks, water pieces, Tiled examples, `18x18` tiles, and CC0 licensing. SunnyLand is attractive and officially advertises a Phaser project, but its downloadable archive could not be inspected and no swimming animation evidence was available. Pixel Adventure remains deferred because its source and archive were rate-limited.
 
 ## Decision Log
 
-- **Adopt for follow-up environment evaluation**: Kenney Pixel Platformer.
-- **Defer for swimming comparison**: SunnyLand, pending direct inspection of its downloadable Phaser project.
+- **Adopt for follow-up environment integration**: Kenney Pixel Platformer.
+- **Retain for swimming**: The existing turtle visual and swimming behavior until a replacement has equivalent verified animation coverage.
+- **Defer**: SunnyLand, because direct archive inspection and swimming coverage remain unverified despite its promising Phaser project listing.
 - **Defer entirely for now**: Pixel Adventure, pending source and archive access.
 - **Reject for this iteration**: None.
+
+## Final Decision
+
+The spike does not need a single pack to cover every gameplay role. Kenney is selected for scenario 1's forest, solid rock blocks, and water environment. The current turtle visual is retained for swimming, avoiding an unverified asset migration. A follow-up production issue should integrate Kenney environment assets and preserve the existing swimming behavior.
 - **Do not use in production yet**: Any candidate asset not copied with its source license evidence.
 
 ## License Sources
