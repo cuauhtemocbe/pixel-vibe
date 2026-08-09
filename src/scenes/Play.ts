@@ -170,6 +170,7 @@ export default class Play extends Phaser.Scene {
     this.jumpsUsed ??= 0;
     const body = this.player.body as Phaser.Physics.Arcade.Body;
     const onFloor = body.blocked.down || body.touching.down;
+    if (onFloor && (body.velocity?.y ?? 0) >= 0) this.jumpsUsed = 0;
     const left = (this.cursors?.left?.isDown ?? false) || this.mobileInput.left;
     const right = (this.cursors?.right?.isDown ?? false) || this.mobileInput.right;
     const jump = (this.cursors?.up?.isDown || this.cursors?.space?.isDown || this.spaceKey?.isDown || this.mobileInput.jump || this.mobileInput.up) ?? false;
@@ -216,6 +217,5 @@ export default class Play extends Phaser.Scene {
       enemy.setData("direction", direction);
       (enemy.body as Phaser.Physics.Arcade.Body).setVelocityX(direction * ENEMY_SPEED);
     });
-    if (onFloor) this.jumpsUsed = 0;
   }
 }

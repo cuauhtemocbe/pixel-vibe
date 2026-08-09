@@ -42,6 +42,26 @@ describe('Transformation roadmap gameplay rules', () => {
     expect(play.jumpsUsed).toBe(2)
   })
 
+  it('preserves the first jump count after leaving the ground', () => {
+    const play = createPlay()
+    play.jumpsUsed = 0
+    play.mobileInput.jump = true
+    play.player.body.blocked.down = true
+
+    play.update(0, 16)
+
+    expect(play.jumpsUsed).toBe(1)
+
+    play.mobileInput.jump = false
+    play.player.body.blocked.down = false
+    play.update(0, 16)
+    play.mobileInput.jump = true
+    play.update(0, 16)
+
+    expect(play.player.body.setVelocityY).toHaveBeenLastCalledWith(DOUBLE_JUMP_VELOCITY)
+    expect(play.jumpsUsed).toBe(2)
+  })
+
   it('cycles to the turtle form and resets its jump state', () => {
     const play = createPlay()
     play.player.setTexture = vi.fn()
