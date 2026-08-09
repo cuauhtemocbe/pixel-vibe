@@ -3,7 +3,7 @@
 **Spec**: `specs/free-asset-pack-spike.md`
 **Issue**: [#34](https://github.com/cuauhtemocbe/pixel-vibe/issues/34)
 **Created**: 2026-08-08
-**Status**: completed
+**Status**: in-progress
 
 ## Components
 
@@ -25,13 +25,19 @@
 - **Files**: `src/scenes/AssetSpike.ts`, candidate asset files under `public/assets/`, and focused tests.
 - **Effort**: M
 
-### 4. Automated visual evidence
+### 4. Scenario 1 environment asset coverage
+
+- **Purpose**: Compare and preview the forest, solid rock blocks, and water lane required by the first gameplay scenario without changing production collisions or swimming logic.
+- **Files**: `src/scenes/AssetSpike.ts`, evaluation record, focused visual tests.
+- **Effort**: S
+
+### 5. Automated visual evidence
 
 - **Purpose**: Prove the isolated view and preview render consistently on desktop and mobile Chromium projects.
 - **Files**: `e2e/asset-spike.spec.ts`, `e2e/*-snapshots/`.
 - **Effort**: S
 
-### 5. Verification and recommendation
+### 6. Verification and recommendation
 
 - **Purpose**: Run repository quality checks, review screenshots, and finalize the adopt/defer/reject recommendation and license obligations.
 - **Files**: `specs/free-asset-pack-spike.md`, evaluation record, snapshots.
@@ -44,8 +50,9 @@
 1. Candidate asset evidence and license record.
 2. Isolated evaluation scene, depending on the selected candidate and verified asset paths.
 3. Start-screen background preview, depending on the isolated scene and selected visual direction.
-4. Automated visual evidence, depending on the scene being reachable and deterministic.
-5. Verification and recommendation, depending on implementation, tests, screenshots, and license evidence.
+4. Scenario 1 environment asset coverage, depending on the isolated scene and candidate comparison.
+5. Automated visual evidence, depending on the scene being reachable and deterministic.
+6. Verification and recommendation, depending on implementation, tests, screenshots, and license evidence.
 
 ### External Dependencies
 
@@ -72,9 +79,9 @@
 ## Milestones
 
 - [x] **M1: Evidence ready** — all three candidates have comparable notes, license information, and a selected direction for technical evaluation; Pixel Frog's rate-limit gap is recorded.
-- [x] **M2: Prototype ready** — the isolated view renders the selected sample assets and the start-screen background preview at 320x180.
+- [x] **M2: Prototype ready** — the isolated view renders the selected sample assets, scenario 1 forest/rock/water composition, and the start-screen background preview at 320x180.
 - [x] **M3: Visual evidence ready** — desktop and mobile Playwright checks pass with reviewed snapshots.
-- [x] **M4: Recommendation ready** — documentation records adopt/defer/reject decisions and attribution obligations; production flow is confirmed unchanged.
+- [ ] **M4: Recommendation ready** — documentation records adopt/defer/reject decisions and attribution obligations; production flow is confirmed unchanged; real scenario 1 asset files are validated.
 
 ## Tasks
 
@@ -106,9 +113,15 @@
   - **Tests**: Browser interaction assertion and visual snapshot; existing start-screen unit/E2E tests remain green.
   - **Effort**: M
 
+- [x] **Task 5: Add scenario 1 environment asset coverage**
+  - **Acceptance**: The isolated preview shows a forest backdrop, solid rock blocks as jumpable obstacles, and a water lane for swimming-form evaluation without changing production collision or movement logic.
+  - **Files**: `src/scenes/AssetSpike.ts`, `docs/asset-evaluation.md`, focused visual snapshots.
+  - **Tests**: Playwright visual snapshot and artifact review.
+  - **Effort**: S
+
 ### Integration (Build Third)
 
-- [x] **Task 5: Add desktop and mobile Playwright evidence**
+- [x] **Task 6: Add desktop and mobile Playwright evidence**
   - **Acceptance**: The isolated evaluation view is reachable by E2E tests; desktop and Pixel 5 screenshots show crisp scaling and the new background; the start interaction is verified.
   - **Files**: `e2e/asset-spike.spec.ts`, `e2e/*-snapshots/`, minimal test-entry configuration if required.
   - **Tests**: `pnpm test:e2e`.
@@ -116,7 +129,7 @@
 
 ### Polish (Build Last)
 
-- [x] **Task 6: Finalize recommendation and run quality gates**
+- [ ] **Task 7: Finalize recommendation and run quality gates**
   - **Acceptance**: The recommendation identifies one primary direction, adopt/defer/reject decisions, verified license obligations, and confirms production assets/behavior are unchanged.
   - **Files**: evaluation record, `specs/free-asset-pack-spike.md` if criteria need checked, optional README note.
   - **Tests**: `pnpm run typecheck`, `pnpm test --run`, `pnpm run build`, `pnpm test:e2e`, and manual screenshot review.

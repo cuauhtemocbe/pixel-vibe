@@ -1,6 +1,6 @@
 ---
 title: Free Asset Pack Evaluation and Start Screen Background Preview
-status: completed
+status: in-progress
 created: 2026-08-08
 updated: 2026-08-08
 issue: #34
@@ -22,7 +22,7 @@ The spike evaluates these candidate sources:
 - [SunnyLand by Ansimuz](https://ansimuz.itch.io/sunny-land-pixel-game-art) — reported CC0 base pack with optional paid extras.
 - [Kenney Pixel Platformer](https://kenney.nl/assets/pixel-platformer) — CC0, 18x18 tiles.
 
-The current production scene and gameplay must remain usable while the candidates are compared. The start-screen background preview belongs to the isolated spike prototype; it is not an approval to replace the production `Start` scene or gameplay assets.
+The current production scene and gameplay must remain usable while the candidates are compared. The start-screen background preview belongs to the isolated spike prototype; it is not an approval to replace the production `Start` scene or gameplay assets. The first gameplay scenario to evaluate is a forest with solid rock blocks the character can jump over and a water section the swimming form can traverse.
 
 ## Requirements
 
@@ -31,11 +31,13 @@ The current production scene and gameplay must remain usable while the candidate
 - [x] The spike provides an isolated Phaser evaluation view at the existing `320x180` logical resolution.
 - [x] Each candidate is evaluated using the same record: license, attribution, dimensions, animation coverage, visual consistency, Phaser integration effort, and fit for the transformation theme.
 - [x] The evaluation view demonstrates at least one environment tile, character, hazard or enemy, and prop or collectible for a selected candidate without broken textures.
+- [x] The evaluation view demonstrates the scenario 1 composition: forest backdrop, solid rock blocks positioned as jumpable obstacles, and a water lane representing the swimming area.
 - [x] The evaluation view includes a start-screen background preview using the selected visual direction.
 - [x] The preview preserves the existing start-screen title, menu, prompt, and start-to-play interaction semantics.
 - [x] Production gameplay assets and scene behavior are not replaced as part of the spike.
 - [x] The spike records an explicit recommendation and identifies assets to adopt, defer, or reject.
 - [x] License and attribution obligations are recorded for the recommendation.
+- [ ] The recommended candidate is validated against real forest tiles, jumpable rock blocks, and water/swimming assets before production adoption.
 
 ### Non-Functional Requirements
 
@@ -81,6 +83,13 @@ Feature: Free asset pack evaluation and start screen background preview
     Given a candidate asset pack is selected for technical evaluation
     When the developer opens the evaluation view at 320x180
     Then an environment tile, character, hazard or enemy, and prop or collectible render without broken textures
+
+  Scenario: Scenario 1 environment assets cover the required traversal affordances
+    Given the isolated evaluation view is running with a selected candidate
+    When the developer inspects the forest scenario strip
+    Then it shows a forest backdrop
+    And solid rock blocks are visibly positioned as obstacles the character can jump over
+    And a water lane is visibly identified as the area for the swimming form
 
   Scenario: The selected direction previews a new start screen background
     Given the isolated evaluation view is running with the selected direction
@@ -149,10 +158,12 @@ Out of scope for this time-boxed spike. Browser startup and rendering must remai
 
 - [x] A comparison record evaluates all three candidates against the same seven criteria.
 - [x] The isolated evaluation view renders the selected candidate's required sample assets without broken textures.
+- [x] The isolated evaluation view shows the scenario 1 forest, jumpable rock blocks, and swimmable water composition.
 - [x] The start-screen background preview is visible at `320x180` and preserves title, menu, prompt, and start interaction readability.
 - [x] Desktop and mobile Playwright screenshots are committed and reviewed with no unintended smoothing or distortion.
 - [x] `pnpm run typecheck`, `pnpm test --run`, `pnpm run build`, and `pnpm test:e2e` pass.
 - [x] The record contains one recommendation plus adopt/defer/reject decisions and documented license obligations, including the Pixel Frog verification gap.
+- [ ] The recommended candidate's real scenario 1 asset files are validated for forest, solid rock blocks, and water/swimming coverage.
 - [x] Production gameplay behavior and assets remain unchanged by the spike.
 
 ## Implementation Plan

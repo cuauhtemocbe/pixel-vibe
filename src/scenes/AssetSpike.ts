@@ -9,10 +9,13 @@ export default class AssetSpike extends Phaser.Scene {
   }
 
   create() {
-    this.game.canvas?.parentElement?.setAttribute("data-scene", "asset-spike");
+    const gameRoot = this.game.canvas?.parentElement;
+    gameRoot?.setAttribute("data-scene", "asset-spike");
+    gameRoot?.setAttribute("data-scenario", "forest-rock-water");
     this.drawBackground();
     this.drawHeader();
     this.drawSamples();
+    this.drawScenarioOne();
     this.drawMenu();
 
     this.input.keyboard?.once("keydown", () => this.startGame());
@@ -42,6 +45,10 @@ export default class AssetSpike extends Phaser.Scene {
     hills.fillTriangle(0, 108, 53, 80, 112, 108);
     hills.fillTriangle(192, 108, 245, 78, 320, 108);
 
+    this.drawPine(27, 105, 0.8, 0x315044);
+    this.drawPine(286, 106, 0.95, 0x315044);
+    this.drawPine(306, 108, 0.65, 0x4d6b4d);
+
     const ground = this.add.graphics();
     ground.fillStyle(0x15152c, 1);
     ground.fillRect(0, 109, GAME_WIDTH, 71);
@@ -49,6 +56,14 @@ export default class AssetSpike extends Phaser.Scene {
     ground.fillRect(0, 109, GAME_WIDTH, 4);
     ground.fillStyle(0x9b6a70, 1);
     for (let x = 4; x < GAME_WIDTH; x += 18) ground.fillRect(x, 121, 8, 3);
+  }
+
+  private drawPine(x: number, y: number, scale: number, color: number) {
+    const tree = this.add.graphics();
+    tree.fillStyle(color, 1);
+    tree.fillTriangle(x, y - 35 * scale, x - 10 * scale, y - 15 * scale, x + 10 * scale, y - 15 * scale);
+    tree.fillTriangle(x, y - 25 * scale, x - 14 * scale, y - 5 * scale, x + 14 * scale, y - 5 * scale);
+    tree.fillTriangle(x, y - 15 * scale, x - 17 * scale, y, x + 17 * scale, y);
   }
 
   private drawHeader() {
@@ -100,6 +115,33 @@ export default class AssetSpike extends Phaser.Scene {
     this.add.text(141, 113, "HERO", { fontSize: "5px", color: "#d9c8e8", fontFamily: "monospace" }).setOrigin(0.5);
     this.add.text(196, 113, "HAZARD", { fontSize: "5px", color: "#d9c8e8", fontFamily: "monospace" }).setOrigin(0.5);
     this.add.text(250, 113, "PROP", { fontSize: "5px", color: "#d9c8e8", fontFamily: "monospace" }).setOrigin(0.5);
+  }
+
+  private drawScenarioOne() {
+    this.add.text(18, 120, "SCENARIO 1 // FOREST + ROCK BLOCKS + SWIMMABLE WATER", {
+      fontSize: "4px",
+      color: "#f7d995",
+      fontFamily: "monospace"
+    });
+
+    const scenario = this.add.graphics();
+    scenario.fillStyle(0x287da3, 1);
+    scenario.fillRect(18, 127, 61, 7);
+    scenario.fillStyle(0x74d1d3, 1);
+    scenario.fillRect(18, 126, 61, 2);
+    scenario.fillStyle(0x725052, 1);
+    scenario.fillRect(109, 126, 24, 8);
+    scenario.fillStyle(0xb57b62, 1);
+    scenario.fillRect(112, 123, 18, 4);
+    scenario.fillStyle(0xd9a477, 1);
+    scenario.fillRect(116, 123, 7, 2);
+    scenario.fillStyle(0x725052, 1);
+    scenario.fillRect(158, 126, 32, 8);
+    scenario.fillStyle(0xb57b62, 1);
+    scenario.fillRect(162, 123, 24, 4);
+
+    this.add.text(49, 136, "SWIM", { fontSize: "4px", color: "#d9c8e8", fontFamily: "monospace" }).setOrigin(0.5);
+    this.add.text(149, 136, "JUMPABLE BLOCKS", { fontSize: "4px", color: "#d9c8e8", fontFamily: "monospace" }).setOrigin(0.5);
   }
 
   private drawMenu() {

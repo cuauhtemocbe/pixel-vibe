@@ -6,6 +6,7 @@ test.describe("asset spike preview", () => {
 
     const game = page.locator("#game");
     await expect(game).toHaveAttribute("data-scene", "asset-spike");
+    await expect(game).toHaveAttribute("data-scenario", "forest-rock-water");
     await expect(game.locator("canvas")).toHaveScreenshot("asset-spike-desktop.png", {
       animations: "disabled",
       maxDiffPixelRatio: 0.01
@@ -17,6 +18,7 @@ test.describe("asset spike preview", () => {
 
     const game = page.locator("#game");
     await expect(game).toHaveAttribute("data-scene", "asset-spike");
+    await expect(game).toHaveAttribute("data-scenario", "forest-rock-water");
     await expect(game.locator("canvas")).toHaveScreenshot("asset-spike-mobile.png", {
       animations: "disabled",
       maxDiffPixelRatio: 0.01
@@ -26,6 +28,7 @@ test.describe("asset spike preview", () => {
   test("preserves the start interaction semantics", async ({ page }) => {
     await page.goto("/?asset-spike=1");
     await expect(page.locator("#game")).toHaveAttribute("data-scene", "asset-spike");
+    await expect(page.locator("#game")).toHaveAttribute("data-scenario", "forest-rock-water");
 
     await page.keyboard.press("Space");
 
