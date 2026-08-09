@@ -38,19 +38,19 @@ The isolated prototype currently uses the repository's existing runtime-compatib
 
 ## Recommendation
 
-**Final decision: use Kenney Pixel Platformer for the scenario 1 environment and retain the existing turtle swimming visual/logic.** Kenney's inspected archive verifies forest-compatible environment pieces, solid blocks, water pieces, Tiled examples, `18x18` tiles, and CC0 licensing. SunnyLand is attractive and officially advertises a Phaser project, but its downloadable archive could not be inspected and no swimming animation evidence was available. Pixel Adventure remains deferred because its source and archive were rate-limited.
+**Final decision: use Kenney Pixel Platformer for the scenario 1 environment and retain the existing Dude swimming visual/logic.** Kenney's inspected archive verifies forest-compatible environment pieces, solid blocks, water pieces, Tiled examples, `18x18` tiles, and CC0 licensing. SunnyLand is attractive and officially advertises a Phaser project, but its downloadable archive could not be inspected and no swimming animation evidence was available. Pixel Adventure remains deferred because its source and archive were rate-limited.
 
 ## Decision Log
 
 - **Adopt for follow-up environment integration**: Kenney Pixel Platformer.
-- **Retain for swimming**: The existing turtle visual and swimming behavior until a replacement has equivalent verified animation coverage.
+- **Retain for swimming**: The existing Dude visual and swimming behavior until a replacement has equivalent verified animation coverage.
 - **Defer**: SunnyLand, because direct archive inspection and swimming coverage remain unverified despite its promising Phaser project listing.
 - **Defer entirely for now**: Pixel Adventure, pending source and archive access.
 - **Reject for this iteration**: None.
 
 ## Final Decision
 
-The spike does not need a single pack to cover every gameplay role. Kenney is selected for scenario 1's forest, solid blocks, and water environment. The current turtle visual is retained for swimming, avoiding an unverified asset migration. This follow-up issue integrates Kenney environment assets while preserving the existing swimming behavior.
+The spike does not need a single pack to cover every gameplay role. Kenney is selected for scenario 1's forest, solid blocks, and water environment. The current Dude visual is retained for swimming, avoiding an unverified asset migration. This follow-up issue integrates Kenney environment assets while preserving the existing swimming behavior.
 - **Do not use in production**: Any candidate asset not copied with its source license evidence.
 
 ## Production Integration: Issue #36
@@ -63,7 +63,7 @@ The spike does not need a single pack to cover every gameplay role. Kenney is se
 
 The production `Play` scene loads these files, keeps the logical resolution at
 `320x180`, and uses a dedicated Phaser Arcade static group for rock collisions.
-The procedural water rule and blue-tinted turtle form remain unchanged.
+The procedural water rule and Dude swimming form remain unchanged.
 
 ## License Sources
 

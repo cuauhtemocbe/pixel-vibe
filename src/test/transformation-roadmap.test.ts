@@ -8,7 +8,7 @@ import {
 
 function createPlay(): any {
   const play = Object.create(Play.prototype)
-  play.currentCharacter = 'owlet'
+  play.currentCharacter = 'dude'
   play.jumpsUsed = 1
   play.wasJumpPressed = false
   play.coyoteTimer = 0
@@ -33,7 +33,7 @@ function createPlay(): any {
 }
 
 describe('Transformation roadmap gameplay rules', () => {
-  it('allows exactly one additional jump for the white owlet form', () => {
+  it('allows exactly one additional jump for the dude form', () => {
     const play = createPlay()
 
     play.update(0, 16)
@@ -62,9 +62,9 @@ describe('Transformation roadmap gameplay rules', () => {
     expect(play.jumpsUsed).toBe(2)
   })
 
-  it('does not give the blue dude form a double jump', () => {
+  it('does not give the white owlet form a double jump', () => {
     const play = createPlay()
-    play.currentCharacter = 'dude'
+    play.currentCharacter = 'owlet'
 
     play.update(0, 16)
 
@@ -72,17 +72,16 @@ describe('Transformation roadmap gameplay rules', () => {
     expect(play.jumpsUsed).toBe(1)
   })
 
-  it('cycles to the turtle form and resets its jump state', () => {
+  it('cycles between dude and owlet and resets its jump state', () => {
     const play = createPlay()
-    play.currentCharacter = 'dude'
     play.player.setTexture = vi.fn()
     play.player.setTint = vi.fn()
     play.player.play = vi.fn()
 
     play.transformCharacter()
 
-    expect(play.currentCharacter).toBe('turtle')
-    expect(play.player.setTint).toHaveBeenCalledWith(0x4ca9d1)
+    expect(play.currentCharacter).toBe('owlet')
+    expect(play.player.setTint).toHaveBeenCalledWith(0xffffff)
     expect(play.jumpsUsed).toBe(0)
   })
 

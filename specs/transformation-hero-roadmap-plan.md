@@ -27,7 +27,7 @@
 
 ## Risks & Assumptions
 
-- Existing sprite sheets do not include a turtle. The `turtle` form uses the existing sprite as a blue-tinted fallback, avoiding an unverified external asset.
+- Existing sprite sheets include only Owlet and Dude; Dude owns the swimming behavior without a separate third form.
 - Phaser scene integration is difficult to execute in jsdom, so pure rule helpers and observable scene state receive unit coverage.
 - The water floor remains safe solid geometry; swimming changes gravity and movement rather than requiring a separate physics world.
 

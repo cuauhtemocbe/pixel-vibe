@@ -14,7 +14,7 @@ import {
   WORLD_WIDTH
 } from "../config/gameConfig";
 
-type CharacterForm = "owlet" | "dude" | "turtle";
+type CharacterForm = "owlet" | "dude";
 
 export default class Play extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -139,10 +139,10 @@ export default class Play extends Phaser.Scene {
   }
 
   private transformCharacter() {
-    this.currentCharacter = this.currentCharacter === "owlet" ? "dude" : this.currentCharacter === "dude" ? "turtle" : "owlet";
-    this.player.setTexture(this.currentCharacter === "turtle" ? "dude_idle" : `${this.currentCharacter}_idle`, 0);
-    this.player.setTint(this.currentCharacter === "turtle" ? 0x4ca9d1 : 0xffffff);
-    this.player.play(`${this.currentCharacter === "turtle" ? "dude" : this.currentCharacter}_idle`);
+    this.currentCharacter = this.currentCharacter === "owlet" ? "dude" : "owlet";
+    this.player.setTexture(`${this.currentCharacter}_idle`, 0);
+    this.player.setTint(0xffffff);
+    this.player.play(`${this.currentCharacter}_idle`);
     this.jumpsUsed = 0;
   }
 
@@ -176,18 +176,18 @@ export default class Play extends Phaser.Scene {
     const jump = (this.cursors?.up?.isDown || this.cursors?.space?.isDown || this.spaceKey?.isDown || this.mobileInput.jump || this.mobileInput.up) ?? false;
     const transform = (this.tKey?.isDown ?? false) || this.mobileInput.transform;
     const inWater = this.player.x >= WATER_START_X && this.player.x <= WATER_END_X;
-    const swimming = inWater && this.currentCharacter === "turtle";
+    const swimming = inWater && this.currentCharacter === "dude";
 
     if (swimming) {
       body.setGravityY?.(0);
       body.setVelocityY(((this.mobileInput.down || this.cursors?.down?.isDown) ? 1 : ((this.mobileInput.up || this.cursors?.up?.isDown) ? -1 : 0)) * PLAYER_SPEED);
     } else {
       body.setGravityY?.(800);
-      if (!inWater && this.player.x < WATER_START_X && right && this.player.x + PLAYER_SPEED * (dt / 1000) >= WATER_START_X && this.currentCharacter !== "turtle") body.setVelocityX(0);
+      if (!inWater && this.player.x < WATER_START_X && right && this.player.x + PLAYER_SPEED * (dt / 1000) >= WATER_START_X && this.currentCharacter !== "dude") body.setVelocityX(0);
       this.coyoteTimer = onFloor ? COYOTE_TIME_MS : Math.max(0, this.coyoteTimer - dt);
       const jumpPressedThisFrame = jump && !this.wasJumpPressed;
       this.jumpBufferTimer = jumpPressedThisFrame ? JUMP_BUFFER_MS : Math.max(0, this.jumpBufferTimer - dt);
-      if (this.currentCharacter === "owlet" && !onFloor && jumpPressedThisFrame && this.jumpsUsed === 1) {
+      if (this.currentCharacter === "dude" && !onFloor && jumpPressedThisFrame && this.jumpsUsed === 1) {
         body.setVelocityY(DOUBLE_JUMP_VELOCITY);
         this.jumpsUsed = 2;
         this.jumpBufferTimer = 0;
@@ -202,7 +202,7 @@ export default class Play extends Phaser.Scene {
     if (left && !right) { body.setVelocityX(-PLAYER_SPEED); this.player.setFlipX(true); }
     else if (right && !left) { body.setVelocityX(PLAYER_SPEED); this.player.setFlipX(false); }
     else if (!swimming) body.setVelocityX(0);
-    if (inWater && this.currentCharacter !== "turtle") this.player.x = Math.min(this.player.x, WATER_START_X - 1);
+    if (inWater && this.currentCharacter !== "dude") this.player.x = Math.min(this.player.x, WATER_START_X - 1);
     this.wasJumpPressed = jump;
     if (transform && !this.wasTransformPressed) this.transformCharacter();
     this.wasTransformPressed = transform;

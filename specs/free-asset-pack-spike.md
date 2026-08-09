@@ -163,7 +163,7 @@ Out of scope for this time-boxed spike. Browser startup and rendering must remai
 - [x] Desktop and mobile Playwright screenshots are committed and reviewed with no unintended smoothing or distortion.
 - [x] `pnpm run typecheck`, `pnpm test --run`, `pnpm run build`, and `pnpm test:e2e` pass.
 - [x] The record contains one recommendation plus adopt/defer/reject decisions and documented license obligations, including the Pixel Frog verification gap.
-- [x] The selected environment candidate's real scenario 1 asset files are validated for forest, solid rock blocks, and water coverage, with the existing turtle swimming assets retained.
+- [x] The selected environment candidate's real scenario 1 asset files are validated for forest, solid rock blocks, and water coverage, with the existing Dude swimming assets retained.
 - [x] Production gameplay behavior and assets remain unchanged by the spike.
 
 ## Implementation Plan
