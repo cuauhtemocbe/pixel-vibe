@@ -50,11 +50,23 @@ The isolated prototype currently uses the repository's existing runtime-compatib
 
 ## Final Decision
 
-The spike does not need a single pack to cover every gameplay role. Kenney is selected for scenario 1's forest, solid rock blocks, and water environment. The current turtle visual is retained for swimming, avoiding an unverified asset migration. A follow-up production issue should integrate Kenney environment assets and preserve the existing swimming behavior.
-- **Do not use in production yet**: Any candidate asset not copied with its source license evidence.
+The spike does not need a single pack to cover every gameplay role. Kenney is selected for scenario 1's forest, solid blocks, and water environment. The current turtle visual is retained for swimming, avoiding an unverified asset migration. This follow-up issue integrates Kenney environment assets while preserving the existing swimming behavior.
+- **Do not use in production**: Any candidate asset not copied with its source license evidence.
+
+## Production Integration: Issue #36
+
+| Role | Runtime file | License |
+| --- | --- | --- |
+| Forest backdrop | `public/assets/kenney/forest-background.png` | CC0 |
+| Solid rock block | `public/assets/kenney/rock-block.png` | CC0 |
+| Water surface | `public/assets/kenney/water-surface.png` | CC0 |
+
+The production `Play` scene loads these files, keeps the logical resolution at
+`320x180`, and uses a dedicated Phaser Arcade static group for rock collisions.
+The procedural water rule and blue-tinted turtle form remain unchanged.
 
 ## License Sources
 
-- Kenney: [Pixel Platformer](https://kenney.nl/assets/pixel-platformer), lists 18x18 tiles, 200 files, and CC0.
-- SunnyLand: [SunnyLand source page](https://ansimuz.itch.io/sunny-land-pixel-game-art), lists Creative Commons Zero v1.0 Universal and a free Phaser project.
-- Pixel Adventure: [Pixel Frog source page](https://pixelfrog-assets.itch.io/pixel-adventure-1). The page was rate-limited during this run; its license must be rechecked before production adoption.
+- Kenney: [Pixel Platformer](https://kenney.nl/assets/pixel-platformer), [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+- SunnyLand: [source page](https://ansimuz.itch.io/sunny-land-pixel-game-art).
+- Pixel Adventure: [Pixel Frog source page](https://pixelfrog-assets.itch.io/pixel-adventure-1).

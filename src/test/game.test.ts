@@ -71,6 +71,13 @@ describe('Game Constants', () => {
     expect(WORLD_WIDTH).toBeGreaterThan(320) // Wider than screen
     expect(WORLD_HEIGHT).toBe(180) // Same as screen height
   })
+
+  it('keeps scenario one rock blocks before the water boundary', () => {
+    const WATER_END_X = 760
+    const ROCK_BLOCK_POSITIONS = [280, 470]
+
+    expect(ROCK_BLOCK_POSITIONS.every((x) => x > 0 && x < WATER_END_X)).toBe(true)
+  })
 })
 
 describe('Asset Paths', () => {

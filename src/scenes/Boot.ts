@@ -36,6 +36,9 @@ export default class Boot extends Phaser.Scene {
     });
     
     this.load.image("tiles", "/assets/tiles.png");
+    this.load.image("kenney_forest", "/assets/kenney/forest-background.png");
+    this.load.image("kenney_rock", "/assets/kenney/rock-block.png");
+    this.load.image("kenney_water", "/assets/kenney/water-surface.png");
   }
 
   create() {

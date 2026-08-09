@@ -36,6 +36,7 @@ test.describe("start screen", () => {
     await page.keyboard.press("Space");
 
     await expect(page.locator("#game")).toHaveAttribute("data-scene", "play");
+    await expect(page.locator("#game")).toHaveAttribute("data-scenario", "forest-rock-water");
     await expect(page.locator("#game canvas")).toHaveScreenshot("play-screen-desktop.png", {
       animations: "disabled",
       maxDiffPixelRatio: 0.01
