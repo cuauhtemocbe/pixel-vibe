@@ -51,6 +51,8 @@ pnpm install
 pnpm dev
 ```
 
+> **Git hooks:** Husky installs them on `pnpm install`; every `git push` first runs a fail-closed Trivy CVE scan (CRITICAL, fixable), so `trivy` must be installed locally — see `.claude/skills/trivy-scan/setup.md`.
+
 ## Package Manager
 
 This project uses **pnpm** for faster, more efficient package management:
